@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-navy-950 text-slate-100 font-sans;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-sky-450 ring-offset-2 ring-offset-navy-950;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-navy-700/70 bg-navy-900 shadow-card;
+  }
+  .card-pad {
+    @apply p-4 sm:p-5;
+  }
+  .muted {
+    @apply text-sm text-slate-400;
+  }
+  .label-caps {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-slate-400;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-navy-600 bg-navy-800 px-3 py-1.5 text-sm font-medium text-slate-100 transition-colors hover:border-sky-450 hover:bg-navy-700 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply border-sky-450 bg-sky-450 text-navy-950 hover:bg-sky-350 hover:text-navy-950;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-navy-600 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-200;
+  }
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-navy-800;
+  }
+}
+
+/* Subtle scrollbar for horizontal forecast strips */
+.strip-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: theme("colors.navy.600") transparent;
+}
+.strip-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.strip-scroll::-webkit-scrollbar-thumb {
+  background: theme("colors.navy.600");
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
