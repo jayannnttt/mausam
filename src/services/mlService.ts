@@ -309,15 +309,15 @@ export interface ModelMetricsResponse {
 // --------------------------------------------------------------------------- #
 
 export function fetchHealth(signal?: AbortSignal): Promise<MlHealth> {
-  return request<MlHealth>("/api/v1/health", { timeoutMs: 8_000, signal });
+  return request<MlHealth>("/api/v1/health", { timeoutMs: 30_000, signal });
 }
 
 export function fetchSources(signal?: AbortSignal): Promise<SourcesResponse> {
-  return request<SourcesResponse>("/api/v1/sources", { timeoutMs: 8_000, signal });
+  return request<SourcesResponse>("/api/v1/sources", { timeoutMs: 30_000, signal });
 }
 
 export function fetchModelMetrics(signal?: AbortSignal): Promise<ModelMetricsResponse> {
-  return request<ModelMetricsResponse>("/api/v1/metrics", { timeoutMs: 15_000, signal });
+  return request<ModelMetricsResponse>("/api/v1/metrics", { timeoutMs: 30_000, signal });
 }
 
 export function predictRainfall(
@@ -374,5 +374,5 @@ export interface TrainingLocation {
 export function fetchTrainingLocations(
   signal?: AbortSignal,
 ): Promise<{ training_locations: TrainingLocation[]; note: string }> {
-  return request(`/api/v1/locations`, { timeoutMs: 8_000, signal });
+  return request(`/api/v1/locations`, { timeoutMs: 30_000, signal });
 }
