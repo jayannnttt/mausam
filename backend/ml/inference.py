@@ -148,12 +148,23 @@ def _obs_for_inference(loc: C.Location, local_today: pd.Timestamp) -> pd.DataFra
         local_today
         - pd.Timedelta(days=max_lead + C.ERA5_LATENCY_DAYS + 45)
     ).strftime("%Y-%m-%d")
-    end = local_today.strftime("%Y-%m-%d")
-    try:
-        raw = sources.fetch_obs_daily(loc, start, end)
-    except Exception as exc:
-        raise ForecastFetchError(f"Could not load recent observations: {exc}") from exc
-    return P.prepare_obs(raw)
+
+    # Open-Meteo ERA5 reanalysis archive has a publication latency of 2-5 days.
+    # Requesting today's date returns HTTP 400 Bad Request.
+    # Because observation features are lagged by (lead + ERA5_LATENCY_DAYS >= 6 days),
+    # an end date 2 to 5 days ago covers all required observation lag features.
+    last_exc: Exception | None = None
+    for lag in range(2, C.ERA5_LATENCY_DAYS + 3):
+        end = (local_today - pd.Timedelta(days=lag)).strftime("%Y-%m-%d")
+        try:
+            raw = sources.fetch_obs_daily(loc, start, end)
+            return P.prepare_obs(raw)
+        except Exception as exc:
+            last_exc = exc
+            if "400" not in str(exc):
+                break
+
+    raise ForecastFetchError(f"Could not load recent observations: {last_exc}")
 
 
 # --------------------------------------------------------------------------- #
