@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mausam-sense-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: CORS_ORIGINS
+        value: https://mausam-mu-flax.vercel.app,http://localhost:5173
+      - key: MAUSAM_DATA_DIR
+        value: ./data
+      - key: MAUSAM_ARTIFACTS_DIR
+        value: ./artifacts
