@@ -23,7 +23,10 @@ CACHE_DIR = DATA_DIR / "cache"
 ARTIFACTS_DIR = Path(os.environ.get("MAUSAM_ARTIFACTS_DIR", BACKEND_DIR / "artifacts"))
 
 for _p in (CACHE_DIR, ARTIFACTS_DIR):
-    _p.mkdir(parents=True, exist_ok=True)
+    try:
+        _p.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
 
 
 # --------------------------------------------------------------------------- #

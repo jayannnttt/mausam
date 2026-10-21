@@ -10,7 +10,9 @@
  * Configuration: VITE_ML_API_BASE (default http://localhost:8000).
  */
 
-const rawBase = (import.meta.env.VITE_ML_API_BASE as string | undefined) ?? "http://localhost:8000";
+const rawBase =
+  (import.meta.env.VITE_ML_API_BASE as string | undefined) ??
+  (import.meta.env.PROD ? "" : "http://localhost:8000");
 export const ML_API_BASE = rawBase.replace(/\/+$/, "");
 
 export type MlErrorKind =

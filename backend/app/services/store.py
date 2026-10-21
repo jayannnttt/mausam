@@ -27,40 +27,50 @@ CREATE TABLE IF NOT EXISTS predictions (
 
 
 def _connect() -> sqlite3.Connection:
-    HISTORY_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        HISTORY_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
     conn = sqlite3.connect(HISTORY_DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def init_db() -> None:
-    with _lock, _connect() as conn:
-        conn.executescript(_SCHEMA)
+    try:
+        with _lock, _connect() as conn:
+            conn.executescript(_SCHEMA)
+    except Exception as exc:
+        print(f"[store] init_db skipped/failed: {exc}")
 
 
 def record_prediction(payload: dict[str, Any]) -> int:
     """Store one prediction request; prune to the configured maximum."""
-    loc = payload.get("location") or {}
-    with _lock, _connect() as conn:
-        cur = conn.execute(
-            "INSERT INTO predictions (created_at, latitude, longitude, location_name, days, "
-            "local_date, payload) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (
-                payload.get("issued_at") or datetime.now(timezone.utc).isoformat(),
-                float(loc.get("latitude") or 0.0),
-                float(loc.get("longitude") or 0.0),
-                loc.get("name"),
-                int(payload.get("horizon_days") or 0),
-                payload.get("local_date"),
-                json.dumps(payload),
-            ),
-        )
-        conn.execute(
-            "DELETE FROM predictions WHERE id NOT IN "
-            "(SELECT id FROM predictions ORDER BY id DESC LIMIT ?)",
-            (HISTORY_MAX_ROWS,),
-        )
-        return int(cur.lastrowid or 0)
+    try:
+        loc = payload.get("location") or {}
+        with _lock, _connect() as conn:
+            cur = conn.execute(
+                "INSERT INTO predictions (created_at, latitude, longitude, location_name, days, "
+                "local_date, payload) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (
+                    payload.get("issued_at") or datetime.now(timezone.utc).isoformat(),
+                    float(loc.get("latitude") or 0.0),
+                    float(loc.get("longitude") or 0.0),
+                    loc.get("name"),
+                    int(payload.get("horizon_days") or 0),
+                    payload.get("local_date"),
+                    json.dumps(payload),
+                ),
+            )
+            conn.execute(
+                "DELETE FROM predictions WHERE id NOT IN "
+                "(SELECT id FROM predictions ORDER BY id DESC LIMIT ?)",
+                (HISTORY_MAX_ROWS,),
+            )
+            return int(cur.lastrowid or 0)
+    except Exception as exc:
+        print(f"[store] record_prediction skipped/failed: {exc}")
+        return 0
 
 
 def recent_predictions(limit: int = 50) -> list[dict[str, Any]]:
