@@ -1,0 +1,200 @@
+/**
+ * The 22 official languages of India recognized under the Eighth Schedule
+ * to the Constitution of India, plus English.
+ */
+
+export interface LanguageOption {
+  code: string;
+  name: string;
+  nativeName: string;
+  script: string;
+  region: string;
+  welcome: string;
+}
+
+export const INDIAN_LANGUAGES: LanguageOption[] = [
+  {
+    code: "en",
+    name: "English",
+    nativeName: "English",
+    script: "Latin",
+    region: "Pan-India / International",
+    welcome: "Welcome",
+  },
+  {
+    code: "hi",
+    name: "Hindi",
+    nativeName: "हिन्दी",
+    script: "Devanagari",
+    region: "North & Central India",
+    welcome: "नमस्ते",
+  },
+  {
+    code: "bn",
+    name: "Bengali",
+    nativeName: "বাংলা",
+    script: "Bengali",
+    region: "West Bengal, Tripura, Assam",
+    welcome: "স্বাগতম",
+  },
+  {
+    code: "te",
+    name: "Telugu",
+    nativeName: "తెలుగు",
+    script: "Telugu",
+    region: "Andhra Pradesh, Telangana",
+    welcome: "స్వాగతం",
+  },
+  {
+    code: "mr",
+    name: "Marathi",
+    nativeName: "मराठी",
+    script: "Devanagari",
+    region: "Maharashtra, Goa",
+    welcome: "नमस्कार",
+  },
+  {
+    code: "ta",
+    name: "Tamil",
+    nativeName: "தமிழ்",
+    script: "Tamil",
+    region: "Tamil Nadu, Puducherry",
+    welcome: "வணக்கம்",
+  },
+  {
+    code: "ur",
+    name: "Urdu",
+    nativeName: "اردو",
+    script: "Perso-Arabic",
+    region: "Pan-India, J&K, Telangana, UP",
+    welcome: "خوش آمدید",
+  },
+  {
+    code: "gu",
+    name: "Gujarati",
+    nativeName: "ગુજરાતી",
+    script: "Gujarati",
+    region: "Gujarat, Dadra & Nagar Haveli",
+    welcome: "નમસ્તે",
+  },
+  {
+    code: "kn",
+    name: "Kannada",
+    nativeName: "ಕನ್ನಡ",
+    script: "Kannada",
+    region: "Karnataka",
+    welcome: "ನಮಸ್ಕಾರ",
+  },
+  {
+    code: "ml",
+    name: "Malayalam",
+    nativeName: "മലയാളം",
+    script: "Malayalam",
+    region: "Kerala, Lakshadweep",
+    welcome: "സ്വാഗതം",
+  },
+  {
+    code: "or",
+    name: "Odia",
+    nativeName: "ଓଡ଼ିଆ",
+    script: "Odia",
+    region: "Odisha",
+    welcome: "ନମସ୍କାର",
+  },
+  {
+    code: "pa",
+    name: "Punjabi",
+    nativeName: "ਪੰਜਾਬੀ",
+    script: "Gurmukhi",
+    region: "Punjab, Delhi, Haryana",
+    welcome: "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ",
+  },
+  {
+    code: "as",
+    name: "Assamese",
+    nativeName: "অসমীয়া",
+    script: "Bengali-Assamese",
+    region: "Assam",
+    welcome: "নমস্কাৰ",
+  },
+  {
+    code: "mai",
+    name: "Maithili",
+    nativeName: "मैथिली",
+    script: "Devanagari / Mithilakshar",
+    region: "Bihar, Jharkhand",
+    welcome: "प्रणाम",
+  },
+  {
+    code: "sat",
+    name: "Santali",
+    nativeName: "ᱥᱟᱱᱛᱟᱲᱤ",
+    script: "Ol Chiki",
+    region: "Jharkhand, Odisha, West Bengal",
+    welcome: "ᱡᱚᱦᱟᱨ",
+  },
+  {
+    code: "ks",
+    name: "Kashmiri",
+    nativeName: "कॉशुर / کٲشُر",
+    script: "Perso-Arabic / Devanagari",
+    region: "Jammu and Kashmir",
+    welcome: "سلام",
+  },
+  {
+    code: "ne",
+    name: "Nepali",
+    nativeName: "नेपाली",
+    script: "Devanagari",
+    region: "Sikkim, West Bengal (Darjeeling)",
+    welcome: "नमस्ते",
+  },
+  {
+    code: "kok",
+    name: "Konkani",
+    nativeName: "कोंकणी",
+    script: "Devanagari",
+    region: "Goa, Karnataka, Maharashtra",
+    welcome: "नमस्कार",
+  },
+  {
+    code: "sd",
+    name: "Sindhi",
+    nativeName: "सिन्धी / سنڌي",
+    script: "Perso-Arabic / Devanagari",
+    region: "Pan-India, Gujarat, Maharashtra",
+    welcome: "جئي جھولي لعل",
+  },
+  {
+    code: "doi",
+    name: "Dogri",
+    nativeName: "डोगरी",
+    script: "Devanagari",
+    region: "Jammu and Kashmir, Himachal",
+    welcome: "नमस्ते",
+  },
+  {
+    code: "mni",
+    name: "Manipuri (Meitei)",
+    nativeName: "মৈতৈলোন্ / ꯃꯤꯇꯩꯂꯣꯟ",
+    script: "Meetei Mayek / Bengali",
+    region: "Manipur",
+    welcome: "ꯈꯨꯔꯨꯝꯖꯔꯤ",
+  },
+  {
+    code: "brx",
+    name: "Bodo",
+    nativeName: "बड़ो",
+    script: "Devanagari",
+    region: "Bodoland, Assam",
+    welcome: "खुलुमबाय",
+  },
+  {
+    code: "sa",
+    name: "Sanskrit",
+    nativeName: "संस्कृतम्",
+    script: "Devanagari",
+    region: "Pan-India Classical",
+    welcome: "सुस्वागतम्",
+  },
+];

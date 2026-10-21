@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import type { Preferences, WeatherDataset } from "../types/weather";
 import { Card, CardHeader, Meter, ErrorState } from "./ui/primitives";
-import { DemoBanner, ProviderLine } from "./DataSourceBadge";
+import { ProviderLine } from "./DataSourceBadge";
 import { ScoreTimeline, PollutionChart, TempHumidityChart } from "./charts";
 import {
   ACTIVITY_PROFILES,
@@ -140,15 +140,10 @@ export function ActivityPlanner({
 
   return (
     <Card ariaLabel="Best time to go outside">
-      {dataset.mode === "DEMO" && (
-        <div className="px-4 pt-3 sm:px-5">
-          <DemoBanner />
-        </div>
-      )}
       <CardHeader
         title="Best time to go outside"
         subtitle={`${planning.profile.label} · next 24 hours · indicative project score, not a safety guarantee`}
-        icon={<Footprints className="h-4 w-4 text-sky-450" aria-hidden="true" />}
+        icon={<Footprints className="h-4 w-4 text-pine-600" aria-hidden="true" />}
         action={
           <span className="chip" title="Share of scored hours that had complete measurements">
             Data coverage {Math.round(planning.dataCoverage * 100)}%
@@ -174,8 +169,8 @@ export function ActivityPlanner({
                 aria-pressed={active}
                 className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
                   active
-                    ? "border-sky-450 bg-sky-450/15 text-sky-350"
-                    : "border-navy-600 bg-navy-850 text-slate-300 hover:border-navy-500"
+                    ? "border-pine-600 bg-pine-600/10 text-pine-700 font-semibold"
+                    : "border-line bg-surface text-ink-600 hover:border-line-strong"
                 }`}
               >
                 <Icon className="h-4 w-4" aria-hidden="true" />
@@ -193,10 +188,10 @@ export function ActivityPlanner({
               <span
                 className={`chip ${
                   band.tone <= 1
-                    ? "border-emerald-500/50 text-emerald-300"
+                    ? "border-pine-600/40 text-pine-800"
                     : band.tone === 2
-                      ? "border-amber-450/50 text-amber-300"
-                      : "border-red-500/50 text-red-300"
+                      ? "border-weather-sun/40 text-ink-900"
+                      : "border-weather-alert/40 text-weather-alert"
                 }`}
                 title={band.advice}
               >
@@ -204,23 +199,23 @@ export function ActivityPlanner({
                 PM2.5 {pm25Now != null ? Math.round(pm25Now * 10) / 10 : "—"} µg/m³ · {band.label}
               </span>
             ) : (
-              <span className="chip text-slate-400">
+              <span className="chip text-ink-400">
                 <Gauge className="h-3.5 w-3.5" aria-hidden="true" />
                 PM2.5 data unavailable
               </span>
             )}
             {prefs.heightenedAqAwareness && (
-              <span className="chip border-sky-450/50 text-sky-350">
+              <span className="chip border-pine-600/40 text-pine-700">
                 Heightened awareness thresholds active
               </span>
             )}
             {best && (
-              <span className="chip border-emerald-500/50 text-emerald-300">
+              <span className="chip border-pine-600/40 text-pine-800">
                 Best score today: {Math.round(best.score)}/100
               </span>
             )}
           </div>
-          {band && <p className="mt-1.5 text-xs text-slate-400">{band.advice}</p>}
+          {band && <p className="mt-1.5 text-xs text-ink-500">{band.advice}</p>}
         </section>
 
         {/* Recommendation */}
@@ -231,22 +226,22 @@ export function ActivityPlanner({
           />
         ) : best ? (
           <section
-            className="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-3.5"
+            className="rounded-xl border border-pine-600/30 bg-pine-600/5 p-4"
             aria-label="Recommended window"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="label-caps text-emerald-300">Recommended window</p>
-                <p className="mt-1 text-xl font-bold">
+                <p className="label-caps text-pine-700">Recommended window</p>
+                <p className="mt-1 text-xl font-bold text-ink-900">
                   {formatRange(best.start, best.end, prefs.timeFormat)}
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 text-xs text-ink-500">
                   {dataset.location.name} local time · {best.merged ? "merged from adjacent good hours" : `${ACTIVITY_PROFILES[activity].windowHours} h window`}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-bold text-emerald-300">{Math.round(best.score)}</p>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400">
+                <p className="text-3xl font-bold tabular-nums text-pine-700">{Math.round(best.score)}</p>
+                <p className="text-[10px] uppercase tracking-wider text-ink-400">
                   indicative /100
                 </p>
                 <div className="mt-1 w-24">
@@ -259,16 +254,16 @@ export function ActivityPlanner({
               type="button"
               onClick={() => setShowWhy((s) => !s)}
               aria-expanded={showWhy}
-              className="mt-3 flex w-full items-center justify-between rounded-lg border border-navy-700 bg-navy-850 px-3 py-2 text-sm font-medium hover:border-navy-600"
+              className="mt-3 flex w-full items-center justify-between rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink-800 hover:border-line-strong"
             >
               <span className="flex items-center gap-1.5">
-                <ListChecks className="h-4 w-4 text-sky-450" aria-hidden="true" />
+                <ListChecks className="h-4 w-4 text-pine-600" aria-hidden="true" />
                 Why this time?
               </span>
               {showWhy ? (
-                <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                <ChevronUp className="h-4 w-4 text-ink-500" aria-hidden="true" />
               ) : (
-                <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                <ChevronDown className="h-4 w-4 text-ink-500" aria-hidden="true" />
               )}
             </button>
 
@@ -284,16 +279,16 @@ export function ActivityPlanner({
                         <span
                           className={`mt-0.5 h-2 w-2 shrink-0 rounded-full ${
                             (f.score ?? 0) >= 75
-                              ? "bg-emerald-400"
+                              ? "bg-pine-600"
                               : (f.score ?? 0) >= 50
-                                ? "bg-amber-450"
-                                : "bg-red-400"
+                                ? "bg-weather-sun"
+                                : "bg-weather-alert"
                           }`}
                           aria-hidden="true"
                         />
-                        <span className="text-slate-300">
-                          <strong>{FACTOR_LABELS[f.key]}:</strong> {f.detail}{" "}
-                          <span className="text-slate-500">
+                        <span className="text-ink-700">
+                          <strong className="text-ink-900">{FACTOR_LABELS[f.key]}:</strong> {f.detail}{" "}
+                          <span className="text-ink-400 tabular-nums">
                             (score {Math.round(f.score ?? 0)}, weight {Math.round(f.weight)}%)
                           </span>
                         </span>
@@ -301,7 +296,7 @@ export function ActivityPlanner({
                     ))}
                 </ul>
                 {others.length > 0 && (
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-ink-500">
                     Compared with the next-best option (
                     {formatRange(others[0].start, others[0].end, prefs.timeFormat)}, score{" "}
                     {Math.round(others[0].score)}), this window ranks higher mainly on{" "}
@@ -310,7 +305,7 @@ export function ActivityPlanner({
                   </p>
                 )}
                 {worst && worst.total != null && (
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-ink-500">
                     The least suitable hour in the horizon is{" "}
                     {formatHour(worst.time, prefs.timeFormat)} (score {Math.round(worst.total)}):
                     {worst.factors
@@ -332,13 +327,13 @@ export function ActivityPlanner({
             <p className="label-caps">Other available windows</p>
             <ul className="mt-2 space-y-2">
               {(showAllWindows ? others : others.slice(0, 2)).map((w, i) => (
-                <li key={w.start} className="rounded-xl border border-navy-700 bg-navy-850 p-3">
+                <li key={w.start} className="rounded-xl border border-line bg-surface p-3">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-sm font-semibold">
+                      <p className="text-sm font-semibold text-ink-900">
                         {RANK_LABELS[i + 1]}: {formatRange(w.start, w.end, prefs.timeFormat)}
                       </p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-ink-500">
                         {w.strengths.length
                           ? `Strongest on: ${w.strengths.map((k) => FACTOR_LABELS[k].toLowerCase()).join(", ")}`
                           : "Similar profile to the best window"}
@@ -348,7 +343,7 @@ export function ActivityPlanner({
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold">{Math.round(w.score)}</p>
+                      <p className="text-lg font-bold tabular-nums text-ink-900">{Math.round(w.score)}</p>
                       <div className="w-20">
                         <Meter value={w.score} tone={TONE_FOR_SCORE(w.score)} label={`Score for ${w.start}`} />
                       </div>

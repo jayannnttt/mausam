@@ -185,6 +185,8 @@ export const INTERESTS: { key: InterestKey; label: string; blurb: string }[] = [
   },
 ];
 
+export type UserPersona = "farmer" | "commuter";
+
 export interface Preferences {
   version: 1;
   locations: GeoLocation[];
@@ -198,4 +200,8 @@ export interface Preferences {
   /** "auto" tries live providers and falls back to demo. */
   dataMode: "auto" | "live" | "demo";
   onboarded: boolean;
+  /** Active language code from official Indian languages (e.g. "hi", "ta", "te", "en") */
+  language?: string;
+  /** User persona: "farmer" (farming + lung/air quality) or "commuter" (commute + lung/air quality, no farm stuff) */
+  userPersona?: UserPersona;
 }

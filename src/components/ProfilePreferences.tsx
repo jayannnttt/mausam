@@ -7,7 +7,7 @@ import { INTERESTS } from "../types/weather";
 import type { InterestKey } from "../types/weather";
 import { usePreferences } from "../state/preferencesContext";
 import { Modal } from "./ui/primitives";
-import { RotateCcw, Database, Radio, Trash2 } from "lucide-react";
+import { RotateCcw, Trash2 } from "lucide-react";
 
 export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { prefs, toggleInterest, update, resetOnboarding } = usePreferences();
@@ -22,16 +22,16 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               const on = prefs.interests.includes(i.key);
               return (
                 <li key={i.key}>
-                  <label className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-navy-700 bg-navy-850 px-3 py-2">
+                  <label className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-line bg-surface px-3 py-2 transition-colors hover:border-line-strong">
                     <span>
-                      <span className="block text-sm font-medium">{i.label}</span>
-                      <span className="block text-xs text-slate-400">{i.blurb}</span>
+                      <span className="block text-sm font-medium text-ink-900">{i.label}</span>
+                      <span className="block text-xs text-ink-500">{i.blurb}</span>
                     </span>
                     <input
                       type="checkbox"
                       checked={on}
                       onChange={() => toggleInterest(i.key as InterestKey)}
-                      className="h-4 w-4 shrink-0 accent-sky-450"
+                      className="h-4 w-4 shrink-0 accent-pine-600"
                       aria-label={i.label}
                     />
                   </label>
@@ -39,38 +39,6 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               );
             })}
           </ul>
-        </section>
-
-        <section>
-          <h3 className="label-caps">Data mode</h3>
-          <div className="mt-2 space-y-1.5">
-            {(
-              [
-                { value: "auto", label: "Auto — live first, demo fallback", icon: Radio },
-                { value: "live", label: "Live only — Open-Meteo providers", icon: Radio },
-                { value: "demo", label: "Demo — synthetic fixtures (offline)", icon: Database },
-              ] as const
-            ).map((o) => (
-              <label
-                key={o.value}
-                className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-navy-700 bg-navy-850 px-3 py-2"
-              >
-                <input
-                  type="radio"
-                  name="dataMode"
-                  checked={prefs.dataMode === o.value}
-                  onChange={() => update({ dataMode: o.value })}
-                  className="h-4 w-4 accent-sky-450"
-                />
-                <o.icon className="h-4 w-4 text-slate-400" aria-hidden="true" />
-                <span className="text-sm">{o.label}</span>
-              </label>
-            ))}
-          </div>
-          <p className="mt-1.5 text-xs text-slate-500">
-            Demo mode works fully offline and is always labelled DEMO. Fixtures: Chennai,
-            Bengaluru, Thanjavur.
-          </p>
         </section>
 
         <section>
@@ -108,16 +76,16 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
 
         <section>
           <h3 className="label-caps">Air-quality awareness</h3>
-          <label className="mt-2 flex cursor-pointer items-start gap-2.5 rounded-lg border border-navy-700 bg-navy-850 px-3 py-2.5">
+          <label className="mt-2 flex cursor-pointer items-start gap-2.5 rounded-lg border border-line bg-surface px-3 py-2.5 transition-colors hover:border-line-strong">
             <input
               type="checkbox"
               checked={prefs.heightenedAqAwareness}
               onChange={() => update({ heightenedAqAwareness: !prefs.heightenedAqAwareness })}
-              className="mt-0.5 h-4 w-4 accent-sky-450"
+              className="mt-0.5 h-4 w-4 accent-pine-600"
             />
             <span>
-              <span className="block text-sm font-medium">Heightened air-quality awareness</span>
-              <span className="block text-xs text-slate-400">
+              <span className="block text-sm font-medium text-ink-900">Heightened air-quality awareness</span>
+              <span className="block text-xs text-ink-500">
                 Tighter PM2.5 thresholds in activity suggestions. This is a preference, not a
                 medical profile — Mausam Sense never asks for diagnoses.
               </span>
@@ -148,7 +116,7 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
           </button>
         </section>
 
-        <p className="text-[11px] text-slate-500">
+        <p className="text-[11px] text-ink-400">
           Mausam Sense is an independent hackathon prototype. It is not affiliated with or endorsed
           by the India Meteorological Department or any government agency.
         </p>
@@ -170,12 +138,12 @@ function Select({
 }) {
   return (
     <label className="block">
-      <span className="text-xs text-slate-400">{label}</span>
+      <span className="text-xs font-medium text-ink-500">{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label={label}
-        className="mt-1 w-full rounded-lg border border-navy-600 bg-navy-850 px-2 py-1.5 text-sm"
+        className="mt-1 w-full rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm text-ink-900 focus:border-pine-600 focus:outline-none focus:ring-1 focus:ring-pine-600"
       >
         {options.map(([v, l]) => (
           <option key={v} value={v}>

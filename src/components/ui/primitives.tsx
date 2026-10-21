@@ -34,13 +34,13 @@ export function CardHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 border-b border-navy-700/60 px-4 py-3 sm:px-5">
+    <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-3 sm:px-5">
       <div className="min-w-0">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-100">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-ink-900">
           {icon}
-          {title}
+          <span>{title}</span>
         </h2>
-        {subtitle && <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>}
+        {subtitle && <p className="mt-0.5 text-xs text-ink-500">{subtitle}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
@@ -73,9 +73,9 @@ export function EmptyState({
 }) {
   return (
     <Card className="card-pad flex flex-col items-center gap-2 py-10 text-center">
-      <Inbox className="h-8 w-8 text-slate-500" aria-hidden="true" />
-      <h3 className="text-sm font-semibold text-slate-200">{title}</h3>
-      <p className="max-w-md text-sm text-slate-400">{description}</p>
+      <Inbox className="h-8 w-8 text-ink-400" aria-hidden="true" />
+      <h3 className="text-sm font-semibold text-ink-900">{title}</h3>
+      <p className="max-w-md text-sm text-ink-500">{description}</p>
       {action && <div className="mt-2">{action}</div>}
     </Card>
   );
@@ -91,14 +91,14 @@ export function ErrorState({
   onRetry?: () => void;
 }) {
   return (
-    <Card className="card-pad border-amber-500/40">
+    <Card className="card-pad border-weather-alertBorder bg-weather-alertSurface">
       <div className="flex items-start gap-3">
-        <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-450" aria-hidden="true" />
+        <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-weather-alert" aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-slate-100">{title}</h3>
-          <p className="mt-1 text-sm text-slate-400">{description}</p>
+          <h3 className="text-sm font-semibold text-ink-900">{title}</h3>
+          <p className="mt-1 text-sm text-ink-700">{description}</p>
           {onRetry && (
-            <button type="button" className="btn mt-3" onClick={onRetry}>
+            <button type="button" className="btn mt-3 border-weather-alertBorder bg-surface hover:bg-line-subtle" onClick={onRetry}>
               Try again
             </button>
           )}
@@ -110,8 +110,8 @@ export function ErrorState({
 
 export function OfflineNotice({ message }: { message: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-      <CloudOff className="h-4 w-4 shrink-0" aria-hidden="true" />
+    <div className="flex items-center gap-2 rounded-lg border border-weather-sunBorder bg-weather-sunSurface px-3 py-2 text-xs text-ink-800">
+      <CloudOff className="h-4 w-4 shrink-0 text-weather-sun" aria-hidden="true" />
       <span>{message}</span>
     </div>
   );
@@ -154,7 +154,7 @@ export function Modal({
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-navy-950/80 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-ink-950/40 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       role="presentation"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -165,15 +165,15 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`card max-h-[92vh] w-full overflow-y-auto ${wide ? "sm:max-w-2xl" : "sm:max-w-md"}`}
+        className={`card max-h-[92vh] w-full overflow-y-auto bg-surface border-line shadow-lift text-ink-900 ${wide ? "sm:max-w-2xl" : "sm:max-w-md"}`}
       >
-        <div className="sticky top-0 flex items-center justify-between border-b border-navy-700/60 bg-navy-900 px-4 py-3">
-          <h2 className="text-sm font-semibold">{title}</h2>
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface/95 px-4 py-3 backdrop-blur">
+          <h2 className="text-sm font-semibold text-ink-900">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-navy-800 hover:text-slate-100"
+            className="rounded-lg p-1.5 text-ink-500 hover:bg-line-subtle hover:text-ink-900 transition-colors"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -195,14 +195,14 @@ export function Meter({
   label?: string;
 }) {
   const colors: Record<string, string> = {
-    sky: "bg-sky-450",
-    amber: "bg-amber-450",
-    red: "bg-red-500",
-    green: "bg-emerald-500",
+    sky: "bg-weather-rain",
+    amber: "bg-weather-sun",
+    red: "bg-weather-alert",
+    green: "bg-pine",
   };
   return (
     <div
-      className="h-1.5 w-full overflow-hidden rounded-full bg-navy-800"
+      className="h-1.5 w-full overflow-hidden rounded-full bg-line-subtle"
       role="meter"
       aria-valuenow={Math.round(value)}
       aria-valuemin={0}

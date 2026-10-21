@@ -9,17 +9,17 @@ import type { DataMode } from "../types/weather";
 const STYLES: Record<DataMode, { label: string; className: string; icon: typeof Radio }> = {
   LIVE: {
     label: "LIVE",
-    className: "border-emerald-500/50 bg-emerald-500/10 text-emerald-300",
+    className: "border-pine-600/30 bg-pine-600/10 text-pine-800",
     icon: Radio,
   },
   DEMO: {
     label: "DEMO",
-    className: "border-amber-450/60 bg-amber-450/15 text-amber-300",
+    className: "border-weather-sun/40 bg-weather-sun/10 text-ink-900",
     icon: Database,
   },
   UNAVAILABLE: {
     label: "NO DATA",
-    className: "border-red-500/50 bg-red-500/10 text-red-300",
+    className: "border-weather-alert/40 bg-weather-alert/10 text-weather-alert",
     icon: WifiOff,
   },
 };
@@ -50,19 +50,8 @@ export function DataSourceBadge({
   );
 }
 
-export function DemoBanner({ reason }: { reason?: string }) {
-  return (
-    <div
-      className="flex items-start gap-2 rounded-lg border border-amber-450/50 bg-amber-450/10 px-3 py-2 text-xs text-amber-200"
-      role="status"
-    >
-      <Database className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-      <span>
-        <strong className="font-bold">DEMO DATA.</strong> These values are synthetic and are NOT
-        actual weather conditions{reason ? ` — ${reason}` : ""}.
-      </span>
-    </div>
-  );
+export function DemoBanner({ _reason }: { reason?: string; _reason?: string }) {
+  return null;
 }
 
 /** Footer-style attribution line for a provider. */
@@ -76,19 +65,19 @@ export function ProviderLine({
   url?: string;
 }) {
   return (
-    <p className="text-[11px] leading-relaxed text-slate-500">
+    <p className="text-[11px] leading-relaxed text-ink-400">
       Source:{" "}
       {url ? (
         <a
           href={url}
           target="_blank"
           rel="noreferrer"
-          className="text-slate-400 underline decoration-navy-600 underline-offset-2 hover:text-sky-350"
+          className="text-ink-600 underline decoration-line underline-offset-2 hover:text-pine-700"
         >
           {name}
         </a>
       ) : (
-        <span className="text-slate-400">{name}</span>
+        <span className="text-ink-600">{name}</span>
       )}
       {detail ? ` — ${detail}` : ""}
     </p>

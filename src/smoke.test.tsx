@@ -43,19 +43,21 @@ const render = () =>
   );
 
 describe("app smoke render", () => {
-  it("renders onboarding for first-time visitors", () => {
+  it("renders language onboarding with official Indian languages for first-time visitors", () => {
     store.clear();
     const html = render();
     expect(html).toContain("Weather that understands your day");
-    expect(html).toContain("Where should we look?");
-    expect(html).toContain("Chennai"); // demo city shortcut
+    expect(html).toContain("Choose Your Language");
+    expect(html).toContain("हिन्दी");
+    expect(html).toContain("தமிழ்");
+    expect(html).toContain("বাংলা");
   });
 
   it("renders the dashboard shell when onboarded", () => {
     setPrefs({ onboarded: true });
     const html = render();
     expect(html).toContain("Mausam Sense");
-    expect(html).toContain("Interests:");
+    expect(html).toContain("View Mode:");
     expect(html).toContain("Refresh");
   });
 

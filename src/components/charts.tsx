@@ -19,8 +19,8 @@ import {
 import { formatHour } from "../utils/format";
 import type { TimeFormat } from "./chartTypes";
 
-const AXIS = { fill: "#94a3b8", fontSize: 10 };
-const GRID = "#1d3254";
+const AXIS = { fill: "#68747A", fontSize: 10 };
+const GRID = "#DEE2DD";
 
 function ChartTooltip({
   active,
@@ -37,12 +37,12 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-navy-600 bg-navy-950/95 px-2.5 py-1.5 text-xs shadow-lg">
-      <p className="font-semibold text-slate-200">
+    <div className="rounded-lg border border-line bg-surface px-2.5 py-1.5 text-xs shadow-md">
+      <p className="font-semibold text-ink-900">
         {label && label.includes("T") ? formatHour(label, timeFormat) : label}
       </p>
       {payload.map((p, i) => (
-        <p key={i} className="text-slate-300">
+        <p key={i} className="text-ink-600">
           <span
             className="mr-1 inline-block h-2 w-2 rounded-full align-middle"
             style={{ backgroundColor: p.color }}
@@ -79,16 +79,16 @@ export function ScoreTimeline({
             <ReferenceArea
               x1={formatHour(highlightRange.from, timeFormat)}
               x2={formatHour(highlightRange.to, timeFormat)}
-              fill="#38bdf8"
+              fill="#35665F"
               fillOpacity={0.08}
-              stroke="#38bdf8"
+              stroke="#35665F"
               strokeOpacity={0.3}
             />
           )}
           <XAxis dataKey="label" tick={AXIS} interval="preserveStartEnd" minTickGap={16} />
           <YAxis domain={[0, 100]} tick={AXIS} width={34} />
           <Tooltip
-            cursor={{ fill: "rgba(56,189,248,0.06)" }}
+            cursor={{ fill: "rgba(53,102,95,0.06)" }}
             content={<ChartTooltip timeFormat={timeFormat} formatter={(n, v) => `${v} / 100 (${n})`} />}
           />
           <Bar dataKey="score" name="Indicative score" radius={[3, 3, 0, 0]}>
@@ -97,14 +97,14 @@ export function ScoreTimeline({
                 key={d.time}
                 fill={
                   d.score == null
-                    ? "#334155"
+                    ? "#DEE2DD"
                     : d.score >= 75
-                      ? "#34d399"
+                      ? "#35665F"
                       : d.score >= 55
-                        ? "#38bdf8"
+                        ? "#4277AA"
                         : d.score >= 35
-                          ? "#f6b83d"
-                          : "#f87171"
+                          ? "#D9A441"
+                          : "#B9493D"
                 }
               />
             ))}
@@ -152,14 +152,14 @@ export function PollutionChart({
             type="monotone"
             dataKey="pm25"
             name="PM2.5"
-            stroke="#f6b83d"
+            stroke="#D9A441"
             strokeWidth={2}
             dot={false}
           />
         </ComposedChart>
       </ResponsiveContainer>
       {strictThreshold != null && (
-        <p className="text-[10px] text-slate-500">
+        <p className="text-[10px] text-ink-400">
           Heightened-awareness reference line: {strictThreshold} µg/m³ (a Mausam Sense preference
           threshold, not an official limit)
         </p>
@@ -206,7 +206,7 @@ export function TempHumidityChart({
             type="monotone"
             dataKey="temp"
             name={`Temp (${tempUnit === "C" ? "°C" : "°F"})`}
-            stroke="#38bdf8"
+            stroke="#4277AA"
             strokeWidth={2}
             dot={false}
           />
@@ -215,7 +215,7 @@ export function TempHumidityChart({
             type="monotone"
             dataKey="feels"
             name={`Feels-like (${tempUnit === "C" ? "°C" : "°F"})`}
-            stroke="#f6b83d"
+            stroke="#D9A441"
             strokeWidth={1.5}
             strokeDasharray="4 3"
             dot={false}
@@ -225,7 +225,7 @@ export function TempHumidityChart({
             type="monotone"
             dataKey="humidity"
             name="Humidity (%)"
-            stroke="#94a3b8"
+            stroke="#68747A"
             strokeWidth={1}
             dot={false}
           />
@@ -265,7 +265,7 @@ export function RainfallChart({
             yAxisId="mm"
             dataKey="mm"
             name="Rain (mm)"
-            fill="#38bdf8"
+            fill="#4277AA"
             radius={[3, 3, 0, 0]}
           />
           <Line
@@ -273,7 +273,7 @@ export function RainfallChart({
             type="monotone"
             dataKey="prob"
             name="Max probability (%)"
-            stroke="#f6b83d"
+            stroke="#35665F"
             strokeWidth={2}
             dot={{ r: 2 }}
           />
@@ -305,13 +305,13 @@ export function RainProbabilityChart({
           <XAxis dataKey="label" tick={AXIS} interval="preserveStartEnd" minTickGap={18} />
           <YAxis domain={[0, 100]} tick={AXIS} width={34} />
           <Tooltip
-            cursor={{ fill: "rgba(56,189,248,0.06)" }}
+            cursor={{ fill: "rgba(66,119,170,0.06)" }}
             content={<ChartTooltip timeFormat={timeFormat} formatter={(n, v) => (n === "Rain probability" ? `${v}%` : `${v} mm`)} />}
           />
           <Bar
             dataKey="prob"
             name="Rain probability"
-            fill="#38bdf8"
+            fill="#4277AA"
             radius={[3, 3, 0, 0]}
             fillOpacity={0.85}
           />

@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local data — HTTP cache and prediction history (regenerate cache with
+# `python -m ml.train`; history is rebuilt as predictions are served)
+data/cache/
+data/*.sqlite3
+data/*.sqlite3-*
+
+# Logs
+ml_train.log
+
+# NOTE: artifacts/ (model_bundle.joblib + metrics.json) is intentionally
+# NOT ignored — the API serves these, and committing them lets a deploy
+# run without retraining.

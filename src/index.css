@@ -5,53 +5,65 @@
 @layer base {
   html {
     @apply antialiased;
+    color-scheme: light;
   }
   body {
-    @apply bg-navy-950 text-slate-100 font-sans;
+    @apply bg-paper text-ink-900 font-sans selection:bg-pine-surface selection:text-pine-dark;
+    background-color: #F5F3EE;
+    color: #18252B;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   :focus-visible {
-    @apply outline-none ring-2 ring-sky-450 ring-offset-2 ring-offset-navy-950;
+    @apply outline-none ring-2 ring-pine ring-offset-2 ring-offset-paper;
   }
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-navy-700/70 bg-navy-900 shadow-card;
+    @apply rounded-xl border border-line bg-surface shadow-card transition-all;
   }
   .card-pad {
     @apply p-4 sm:p-5;
   }
   .muted {
-    @apply text-sm text-slate-400;
+    @apply text-sm text-ink-500;
   }
   .label-caps {
-    @apply text-[11px] font-semibold uppercase tracking-wider text-slate-400;
+    @apply text-[11px] font-semibold uppercase tracking-wider text-ink-500;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-navy-600 bg-navy-800 px-3 py-1.5 text-sm font-medium text-slate-100 transition-colors hover:border-sky-450 hover:bg-navy-700 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs sm:text-sm font-medium text-ink-800 transition-all hover:border-ink-300 hover:text-ink-950 hover:bg-line-subtle/60 active:bg-line-subtle disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply border-sky-450 bg-sky-450 text-navy-950 hover:bg-sky-350 hover:text-navy-950;
+    @apply border-pine bg-pine font-medium text-surface shadow-sm hover:bg-pine-hover active:bg-pine-dark hover:text-surface;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full border border-navy-600 bg-navy-800 px-2.5 py-1 text-xs font-medium text-slate-200;
+    @apply inline-flex items-center gap-1 rounded-md border border-line bg-surface px-2 py-0.5 text-xs font-medium text-ink-700 transition-colors;
   }
   .skeleton {
-    @apply animate-pulse rounded-lg bg-navy-800;
+    @apply animate-pulse rounded bg-line/60;
   }
 }
 
-/* Subtle scrollbar for horizontal forecast strips */
+/* Tabular numerals for clean meteorological alignments */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle editorial scrollbar for hourly forecast strips */
 .strip-scroll {
   scrollbar-width: thin;
-  scrollbar-color: theme("colors.navy.600") transparent;
+  scrollbar-color: #DEE2DD transparent;
 }
 .strip-scroll::-webkit-scrollbar {
-  height: 6px;
+  height: 5px;
 }
 .strip-scroll::-webkit-scrollbar-thumb {
-  background: theme("colors.navy.600");
+  background: #DEE2DD;
   border-radius: 999px;
+}
+.strip-scroll::-webkit-scrollbar-thumb:hover {
+  background: #C5CCC4;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -60,3 +72,4 @@
     transition-duration: 0.01ms !important;
   }
 }
+

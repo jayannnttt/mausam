@@ -13,8 +13,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { GeoLocation, InterestKey, Preferences } from "../types/weather";
+import type { GeoLocation, InterestKey, Preferences, UserPersona } from "../types/weather";
 import { DEMO_LOCATIONS } from "../services/demoDataService";
+import { getTranslation, type TranslationDict } from "../i18n/translations";
 
 const STORAGE_KEY = "mausam-sense:prefs:v1";
 
@@ -22,13 +23,15 @@ export const DEFAULT_PREFERENCES: Preferences = {
   version: 1,
   locations: [DEMO_LOCATIONS[0]],
   selectedLocationId: DEMO_LOCATIONS[0].id,
-  interests: ["outdoor", "comfort"],
+  interests: ["commuting", "outdoor", "comfort"],
   heightenedAqAwareness: false,
   temperatureUnit: "C",
   windUnit: "kmh",
   timeFormat: "12h",
   dataMode: "auto",
   onboarded: false,
+  language: "en",
+  userPersona: "commuter",
 };
 
 export function loadPreferences(): Preferences {
@@ -40,6 +43,8 @@ export function loadPreferences(): Preferences {
     return {
       ...DEFAULT_PREFERENCES,
       ...parsed,
+      language: parsed.language ?? DEFAULT_PREFERENCES.language,
+      userPersona: parsed.userPersona ?? (parsed.interests?.includes("farming") ? "farmer" : "commuter"),
       locations: parsed.locations?.length ? parsed.locations : DEFAULT_PREFERENCES.locations,
       interests: parsed.interests?.length ? parsed.interests : DEFAULT_PREFERENCES.interests,
     };
@@ -58,6 +63,11 @@ function save(prefs: Preferences): void {
 
 interface PreferencesContextValue {
   prefs: Preferences;
+  language: string;
+  setLanguage: (lang: string) => void;
+  persona: UserPersona;
+  setPersona: (p: UserPersona) => void;
+  t: TranslationDict;
   selectedLocation: GeoLocation;
   setSelectedLocation: (loc: GeoLocation) => void;
   toggleInterest: (key: InterestKey) => void;
@@ -98,9 +108,28 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     setPrefs((p) => ({ ...p, ...patch }));
   }, []);
 
+  const setLanguage = useCallback((lang: string) => {
+    setPrefs((p) => ({ ...p, language: lang }));
+  }, []);
+
+  const setPersona = useCallback((persona: UserPersona) => {
+    setPrefs((p) => {
+      const interests: InterestKey[] =
+        persona === "farmer"
+          ? ["farming", "outdoor", "comfort"]
+          : ["commuting", "outdoor", "comfort"];
+      return { ...p, userPersona: persona, interests };
+    });
+  }, []);
+
   const resetOnboarding = useCallback(() => {
     setPrefs((p) => ({ ...p, onboarded: false }));
   }, []);
+
+  const language = prefs.language || "en";
+  const persona: UserPersona =
+    prefs.userPersona || (prefs.interests.includes("farming") ? "farmer" : "commuter");
+  const t = useMemo(() => getTranslation(language), [language]);
 
   const selectedLocation = useMemo(() => {
     return (
@@ -113,13 +142,30 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       prefs,
+      language,
+      setLanguage,
+      persona,
+      setPersona,
+      t,
       selectedLocation,
       setSelectedLocation,
       toggleInterest,
       update,
       resetOnboarding,
     }),
-    [prefs, selectedLocation, setSelectedLocation, toggleInterest, update, resetOnboarding],
+    [
+      prefs,
+      language,
+      setLanguage,
+      persona,
+      setPersona,
+      t,
+      selectedLocation,
+      setSelectedLocation,
+      toggleInterest,
+      update,
+      resetOnboarding,
+    ],
   );
 
   return (
