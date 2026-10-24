@@ -26,6 +26,7 @@ import type { Preferences, WeatherDataset } from "../types/weather";
 import { Card } from "./ui/primitives";
 import { WeatherIcon, isNightTime } from "../utils/wmo";
 import { getTranslation, getTranslatedWeatherText } from "../i18n/translations";
+import { translateLocationName } from "../i18n/locations";
 import {
   formatHour,
   formatTemp,
@@ -97,9 +98,9 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-pine animate-pulse" />
             <h2 className="text-base font-semibold text-ink-950 sm:text-lg">
-              {dataset.location.name}
+              {translateLocationName(dataset.location.name, prefs.language)}
               {dataset.location.admin1 ? (
-                <span className="text-sm font-normal text-ink-500">, {dataset.location.admin1}</span>
+                <span className="text-sm font-normal text-ink-500">, {translateLocationName(dataset.location.admin1, prefs.language)}</span>
               ) : null}
             </h2>
           </div>

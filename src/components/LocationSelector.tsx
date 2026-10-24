@@ -11,6 +11,7 @@ import { DEMO_LOCATIONS } from "../services/demoDataService";
 import { describeError } from "../services/httpClient";
 import { GpsLocationControl } from "./GpsLocationControl";
 import { usePreferences } from "../state/preferencesContext";
+import { translateLocationName } from "../i18n/locations";
 
 export function LocationSearchResults({
   query,
@@ -19,7 +20,7 @@ export function LocationSearchResults({
   query: string;
   onPick: (loc: GeoLocation) => void;
 }) {
-  const { t } = usePreferences();
+  const { t, language } = usePreferences();
   const [results, setResults] = useState<GeoLocation[]>([]);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,11 +82,11 @@ export function LocationSearchResults({
               <MapPin className="h-4 w-4 shrink-0 text-pine" aria-hidden="true" />
               <span className="min-w-0">
                 <span className="block truncate text-sm font-medium text-ink-900">
-                  {loc.name}
-                  {loc.admin1 ? `, ${loc.admin1}` : ""}
+                  {translateLocationName(loc.name, language)}
+                  {loc.admin1 ? `, ${translateLocationName(loc.admin1, language)}` : ""}
                 </span>
                 <span className="block truncate text-xs text-ink-500">
-                  {loc.country}
+                  {translateLocationName(loc.country, language)}
                   {loc.population ? ` · pop. ${loc.population.toLocaleString("en-IN")}` : ""}
                 </span>
               </span>
@@ -170,7 +171,7 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
 }
 
 export function DemoCityButtons({ onPick }: { onPick: (loc: GeoLocation) => void }) {
-  const { t } = usePreferences();
+  const { t, language } = usePreferences();
   return (
     <div className="mt-3">
       <p className="label-caps">{t.popularCities || "Popular observation cities"}</p>
@@ -181,10 +182,10 @@ export function DemoCityButtons({ onPick }: { onPick: (loc: GeoLocation) => void
             type="button"
             className="chip hover:border-pine hover:text-pine transition-colors"
             onClick={() => onPick(loc)}
-            title={`Select ${loc.name}`}
+            title={`Select ${translateLocationName(loc.name, language)}`}
           >
             <MapPin className="h-3 w-3 text-pine" aria-hidden="true" />
-            <span>{loc.name}</span>
+            <span>{translateLocationName(loc.name, language)}</span>
           </button>
         ))}
       </div>
@@ -204,7 +205,7 @@ export function LocationSelector({
   onSelect: (loc: GeoLocation) => void;
   onSaveNew: (loc: GeoLocation) => void;
 }) {
-  const { t } = usePreferences();
+  const { t, language } = usePreferences();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -228,7 +229,7 @@ export function LocationSelector({
         className="flex items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 py-1 text-xs sm:text-sm font-medium text-ink-900 hover:border-ink-300 transition-colors shadow-xs"
       >
         <MapPin className="h-3.5 w-3.5 text-pine shrink-0" aria-hidden="true" />
-        <span className="max-w-[5.5rem] sm:max-w-[9rem] truncate">{selected.name}</span>
+        <span className="max-w-[5.5rem] sm:max-w-[9rem] truncate">{translateLocationName(selected.name, language)}</span>
       </button>
       {open && (
         <div
@@ -286,8 +287,8 @@ export function LocationSelector({
                     >
                       <Navigation className="h-3 w-3 shrink-0 text-ink-400" aria-hidden="true" />
                       <span className="truncate">
-                        {loc.name}
-                        {loc.admin1 ? `, ${loc.admin1}` : ""}
+                        {translateLocationName(loc.name, language)}
+                        {loc.admin1 ? `, ${translateLocationName(loc.admin1, language)}` : ""}
                       </span>
                     </button>
                   </li>

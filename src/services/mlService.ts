@@ -309,7 +309,7 @@ export interface ModelMetricsResponse {
 // --------------------------------------------------------------------------- #
 
 export function fetchHealth(signal?: AbortSignal): Promise<MlHealth> {
-  return request<MlHealth>("/api/v1/health", { timeoutMs: 30_000, signal });
+  return request<MlHealth>("/api/v1/health", { timeoutMs: 8_000, signal });
 }
 
 export function fetchSources(signal?: AbortSignal): Promise<SourcesResponse> {

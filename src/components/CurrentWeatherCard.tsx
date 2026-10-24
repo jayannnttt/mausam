@@ -23,6 +23,7 @@ import { ProviderLine } from "./DataSourceBadge";
 import { Card } from "./ui/primitives";
 import { WeatherIcon, isNightTime } from "../utils/wmo";
 import { getTranslation, getTranslatedWeatherText, getTranslatedDay } from "../i18n/translations";
+import { translateLocationName } from "../i18n/locations";
 import {
   formatHour,
   formatTemp,
@@ -38,8 +39,10 @@ function getEditorialSummary(
   current: CurrentWeather | null | undefined,
   hourly: HourlyWeather[],
   daily: DailyWeather[],
-  today: string
+  today: string,
+  lang: string = "en"
 ): string {
+  const isEn = lang === "en";
   const next12 = hourly.slice(0, 12);
   const rainHour = next12.find(
     (h) => (h.precipitationProbabilityPct ?? 0) >= 45 || (h.precipitationMm ?? 0) > 0.5
@@ -48,26 +51,40 @@ function getEditorialSummary(
   if (rainHour) {
     const timeStr = rainHour.time.slice(11, 16);
     const prob = rainHour.precipitationProbabilityPct ?? 60;
-    return `Precipitation likely near ${timeStr} (${Math.round(prob)}% probability). Cloud cover expected to thicken through the period.`;
+    return isEn
+      ? `Precipitation likely near ${timeStr} (${Math.round(prob)}% probability). Cloud cover expected to thicken through the period.`
+      : `${timeStr} के आसपास वर्षा की संभावना (${Math.round(prob)}% संभावना)। बादल घने होने का अनुमान है।`;
   }
 
   const todayDaily = daily.find((d) => d.date === today) ?? daily[0];
   if (todayDaily && (todayDaily.precipitationProbabilityMaxPct ?? 0) >= 40) {
-    return `Scattered precipitation possible during the day with a ${Math.round(todayDaily.precipitationProbabilityMaxPct!)}% peak likelihood.`;
+    const prob = Math.round(todayDaily.precipitationProbabilityMaxPct!);
+    return isEn
+      ? `Scattered precipitation possible during the day with a ${prob}% peak likelihood.`
+      : `दिन के दौरान हल्की वर्षा संभव (${prob}% उच्चतम संभावना)।`;
   }
 
   const temp = current?.temperatureC ?? 26;
   const apparent = current?.apparentTemperatureC ?? temp;
   if (apparent >= 36) {
-    return `Intense heat index through midday. Plan hydration and moderate sustained physical exertion in open sunlight.`;
+    return isEn
+      ? `Intense heat index through midday. Plan hydration and moderate sustained physical exertion in open sunlight.`
+      : `दोपहर में तीव्र गर्मी का प्रभाव। पर्याप्त पानी पिएं और धूप में भारी परिश्रम से बचें।`;
   }
   if (temp <= 14) {
-    return `Cooler airmass settled over the region. Moderate thermal retention layers advised for morning and evening travel.`;
+    return isEn
+      ? `Cooler airmass settled over the region. Moderate thermal retention layers advised for morning and evening travel.`
+      : `क्षेत्र में ठंडी हवा का प्रभाव। सुबह और शाम के समय हल्के गर्म कपड़े पहनें।`;
   }
   if ((current?.windSpeedKmh ?? 0) >= 28) {
-    return `Noticeable surface breeze sustained around ${Math.round(current!.windSpeedKmh!)} km/h with occasional higher gusts.`;
+    const spd = Math.round(current!.windSpeedKmh!);
+    return isEn
+      ? `Noticeable surface breeze sustained around ${spd} km/h with occasional higher gusts.`
+      : `सतह पर लगभग ${spd} किमी/घंटा की गति से हवाएं और बीच-बीच में तेज झोंके संभव।`;
   }
-  return `Stable, calm atmospheric conditions with consistent barometric reading and good ambient visibility.`;
+  return isEn
+    ? `Stable, calm atmospheric conditions with consistent barometric reading and good ambient visibility.`
+    : `स्थिर और शांत वायुमंडलीय स्थितियां, सामान्य दबाव और अच्छी दृश्यता।`;
 }
 
 export function CurrentWeatherCard({
@@ -133,8 +150,8 @@ export function CurrentWeatherCard({
   }, [dataset.daily]);
 
   const editorialNote = useMemo(
-    () => getEditorialSummary(c, dataset.hourly, dataset.daily, today),
-    [c, dataset.hourly, dataset.daily, today]
+    () => getEditorialSummary(c, dataset.hourly, dataset.daily, today, prefs.language),
+    [c, dataset.hourly, dataset.daily, today, prefs.language]
   );
 
   return (
@@ -143,12 +160,12 @@ export function CurrentWeatherCard({
       <div className="flex items-center justify-between border-b border-line px-4 py-3 sm:px-6">
         <div>
           <span className="text-[10px] font-semibold uppercase tracking-widest text-ink-500">
-            Observation Point
+            {t.observationPoint}
           </span>
           <h2 className="text-base font-semibold text-ink-950 sm:text-lg">
-            {dataset.location.name}
+            {translateLocationName(dataset.location.name, prefs.language)}
             {dataset.location.admin1 ? (
-              <span className="text-sm font-normal text-ink-500">, {dataset.location.admin1}</span>
+              <span className="text-sm font-normal text-ink-500">, {translateLocationName(dataset.location.admin1, prefs.language)}</span>
             ) : null}
           </h2>
         </div>
@@ -158,7 +175,7 @@ export function CurrentWeatherCard({
           </p>
           <p className="flex items-center justify-end gap-1 text-[11px] text-ink-500">
             <Clock className="h-3 w-3" aria-hidden="true" />
-            <span>Updated {formatHour(nowIso ?? "", prefs.timeFormat)}</span>
+            <span>{t.updated} {formatHour(nowIso ?? "", prefs.timeFormat)}</span>
           </p>
         </div>
       </div>
@@ -214,7 +231,7 @@ export function CurrentWeatherCard({
                 className="h-10 w-10 text-pine"
               />
               <span className="text-xs uppercase tracking-wider font-semibold text-ink-500">
-                Synoptic Outlook
+                {t.synopticOutlook}
               </span>
             </div>
             <p className="font-editorial italic text-sm sm:text-base leading-relaxed text-ink-800">
@@ -230,7 +247,7 @@ export function CurrentWeatherCard({
               {t.next24Hours} ({tempUnitLabel(prefs.temperatureUnit)})
             </span>
             <span className="text-[10px] text-ink-500 tabular-nums">
-              Horizontal scroll · 24-hr sequence
+              {t.horizontalScroll}
             </span>
           </div>
 
@@ -284,7 +301,7 @@ export function CurrentWeatherCard({
             <div className="flex items-center justify-between mb-2">
               <span className="label-caps">{t.sevenDayForecast}</span>
               <span className="text-[10px] text-ink-500">
-                Range indicator: {formatTemp(weekMin, prefs.temperatureUnit)} → {formatTemp(weekMax, prefs.temperatureUnit)}
+                {t.rangeIndicator}: {formatTemp(weekMin, prefs.temperatureUnit)} → {formatTemp(weekMax, prefs.temperatureUnit)}
               </span>
             </div>
 
@@ -331,7 +348,7 @@ export function CurrentWeatherCard({
                       {/* Rain Probability */}
                       <span
                         className="w-12 shrink-0 text-center text-xs tabular-nums text-weather-rain font-medium"
-                        title={prob != null ? `Max rain chance: ${Math.round(prob)}%` : undefined}
+                        title={prob != null ? `${Math.round(prob)}%` : undefined}
                       >
                         {prob != null && prob > 15 ? `${Math.round(prob)}%` : "—"}
                       </span>
@@ -369,25 +386,25 @@ export function CurrentWeatherCard({
                       <div className="border-t border-line-subtle bg-line-subtle/40 px-4 py-3 text-xs text-ink-700">
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div>
-                            <span className="text-[10px] uppercase font-semibold text-ink-500">Conditions</span>
+                            <span className="text-[10px] uppercase font-semibold text-ink-500">{t.conditions}</span>
                             <p className="mt-0.5 font-medium text-ink-900">
                               {getTranslatedWeatherText(d.weatherCode, prefs.language)}
                             </p>
                           </div>
                           <div>
-                            <span className="text-[10px] uppercase font-semibold text-ink-500">Rain Accumulation</span>
+                            <span className="text-[10px] uppercase font-semibold text-ink-500">{t.rainAccumulation}</span>
                             <p className="mt-0.5 font-medium text-ink-900 tabular-nums">
-                              {d.precipitationSumMm != null ? `${d.precipitationSumMm} mm` : "None expected"}
+                              {d.precipitationSumMm != null ? `${d.precipitationSumMm} mm` : t.noneExpected}
                             </p>
                           </div>
                           <div>
-                            <span className="text-[10px] uppercase font-semibold text-ink-500">Max Rain Risk</span>
+                            <span className="text-[10px] uppercase font-semibold text-ink-500">{t.maxRainRisk}</span>
                             <p className="mt-0.5 font-medium text-ink-900 tabular-nums">
-                              {d.precipitationProbabilityMaxPct != null ? `${Math.round(d.precipitationProbabilityMaxPct)}%` : "Minimal"}
+                              {d.precipitationProbabilityMaxPct != null ? `${Math.round(d.precipitationProbabilityMaxPct)}%` : t.minimal}
                             </p>
                           </div>
                           <div>
-                            <span className="text-[10px] uppercase font-semibold text-ink-500">Thermal Span</span>
+                            <span className="text-[10px] uppercase font-semibold text-ink-500">{t.thermalSpan}</span>
                             <p className="mt-0.5 font-medium text-ink-900 tabular-nums">
                               {formatTemp(d.tempMinC, prefs.temperatureUnit)} → {formatTemp(d.tempMaxC, prefs.temperatureUnit)}
                             </p>
@@ -404,49 +421,49 @@ export function CurrentWeatherCard({
 
         {/* ================= SECONDARY WEATHER DETAILS ================= */}
         <div className="border-t border-line pt-5">
-          <span className="label-caps mb-3 block">Observation Matrix</span>
+          <span className="label-caps mb-3 block">{t.observationMatrix}</span>
 
           <dl className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
             <MetricTile
               icon={<Droplets className="h-4 w-4 text-weather-rain" aria-hidden="true" />}
               label={t.humidity}
               value={c?.humidityPct != null ? `${Math.round(c.humidityPct)}%` : "—"}
-              detail="Relative humidity"
+              detail={t.relativeHumidity}
             />
 
             <MetricTile
               icon={<Wind className="h-4 w-4 text-pine" aria-hidden="true" />}
               label={t.wind}
               value={formatWind(c?.windSpeedKmh ?? null, prefs.windUnit)}
-              detail="Surface speed"
+              detail={t.surfaceSpeed}
             />
 
             <MetricTile
               icon={<CloudRain className="h-4 w-4 text-weather-rain" aria-hidden="true" />}
               label={t.rainNow}
               value={c?.precipitationMm != null ? `${c.precipitationMm} mm` : "0.0 mm"}
-              detail="Current hour rate"
+              detail={t.currentHourRate}
             />
 
             <MetricTile
               icon={<Gauge className="h-4 w-4 text-pine" aria-hidden="true" />}
               label={t.pm25}
               value={nowAq?.pm25 != null ? `${Math.round(nowAq.pm25)} µg/m³` : "—"}
-              detail="Air particulate level"
+              detail={t.airParticulateLevel}
             />
 
             <MetricTile
               icon={<Sun className="h-4 w-4 text-weather-sun" aria-hidden="true" />}
-              label="UV Index"
+              label={t.uvIndex}
               value={upcoming[0]?.uvIndex != null ? `${Math.round(upcoming[0].uvIndex * 10) / 10}` : "—"}
-              detail="Solar exposure rate"
+              detail={t.solarExposureRate}
             />
 
             <MetricTile
               icon={<Eye className="h-4 w-4 text-pine" aria-hidden="true" />}
-              label="Visibility"
+              label={t.visibility}
               value={upcoming[0]?.visibilityM != null ? formatVisibility(upcoming[0].visibilityM) : "—"}
-              detail="Atmospheric clarity"
+              detail={t.atmosphericClarity}
             />
           </dl>
         </div>

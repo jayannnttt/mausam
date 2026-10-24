@@ -175,6 +175,22 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
 export function usePreferences(): PreferencesContextValue {
   const ctx = useContext(PreferencesContext);
-  if (!ctx) throw new Error("usePreferences must be used inside PreferencesProvider");
+  if (!ctx) {
+    const prefs = DEFAULT_PREFERENCES;
+    const lang = prefs.language ?? "en";
+    return {
+      prefs,
+      language: lang,
+      setLanguage: () => {},
+      persona: prefs.userPersona ?? "commuter",
+      setPersona: () => {},
+      t: getTranslation(lang),
+      selectedLocation: prefs.locations[0] ?? DEMO_LOCATIONS[0],
+      setSelectedLocation: () => {},
+      toggleInterest: () => {},
+      update: () => {},
+      resetOnboarding: () => {},
+    };
+  }
   return ctx;
 }

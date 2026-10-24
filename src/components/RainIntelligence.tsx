@@ -59,6 +59,8 @@ import {
 import { readCachedFix } from "../services/gpsLocation";
 import { Card, CardHeader, EmptyState, ErrorState, SkeletonCard } from "./ui/primitives";
 import { usePreferences } from "../state/preferencesContext";
+import { translateLocationName } from "../i18n/locations";
+import { getTranslatedDay } from "../i18n/translations";
 import {
   buildBreakdownRows,
   buildComparisonRows,
@@ -101,7 +103,7 @@ type BackendState = "checking" | "ready" | "model_missing" | "unreachable";
 // --------------------------------------------------------------------------- #
 
 export function PredictionTable({ days }: { days: DayPrediction[] }) {
-  const { t } = usePreferences();
+  const { t, language } = usePreferences();
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[560px] text-left text-xs">
@@ -119,7 +121,7 @@ export function PredictionTable({ days }: { days: DayPrediction[] }) {
           {days.map((d) => (
             <tr key={d.date} className="border-b border-line/60 align-top">
               <td className="py-2 pr-2 font-medium text-ink-900">
-                {d.weekday ? `${d.weekday} ` : ""}
+                {d.weekday ? `${getTranslatedDay(d.weekday, language)} ` : ""}
                 {d.date.slice(5)}
               </td>
               <td className="py-2 pr-2 text-ink-500 tabular-nums">{d.lead_days}{t.dayLeadUnit}</td>
@@ -171,70 +173,93 @@ export function PredictionTable({ days }: { days: DayPrediction[] }) {
 }
 
 export function ComparisonTable({ rows }: { rows: ComparisonRow[] }) {
+  const { t, language } = usePreferences();
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[620px] text-left text-xs">
         <thead>
           <tr className="border-b border-line text-[10px] uppercase tracking-wider text-ink-400">
-            <th className="py-2 pr-2 font-semibold">Source</th>
-            <th className="py-2 pr-2 font-semibold">MAE</th>
-            <th className="py-2 pr-2 font-semibold">RMSE</th>
-            <th className="py-2 pr-2 font-semibold">Bias</th>
-            <th className="py-2 pr-2 font-semibold">Precision</th>
-            <th className="py-2 pr-2 font-semibold">Recall</th>
-            <th className="py-2 pr-2 font-semibold">F1</th>
-            <th className="py-2 pr-2 font-semibold">Brier</th>
-            <th className="py-2 pr-2 font-semibold">n</th>
+            <th className="py-2 pr-2 font-semibold">{t.colSource}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colMae}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colRmse}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colBias}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colPrecision}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colRecall}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colF1}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colBrier}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colN}</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
-            <tr key={r.source} className="border-b border-line/60">
-              <td className="py-2 pr-2">
-                <span className="block font-medium text-ink-900">
-                  {r.source === "ml" ? "ML model" : r.source === "nwp_raw" ? "NWP forecast" : r.source === "imd" ? "IMD" : "Climatology"}
-                </span>
-                <span className="block text-[10px] leading-tight text-ink-400">{r.kind}</span>
-              </td>
-              {r.available ? (
-                <>
-                  <td className="py-2 pr-2 tabular-nums text-slate-200">{r.mae?.toFixed(2)}</td>
-                  <td className="py-2 pr-2 tabular-nums text-slate-300">{r.rmse?.toFixed(2)}</td>
-                  <td
-                    className={`py-2 pr-2 tabular-nums ${
-                      r.bias === null
-                        ? "text-slate-400"
-                        : r.bias > 0.05
-                          ? "text-amber-300"
-                          : r.bias < -0.05
-                            ? "text-sky-350"
-                            : "text-emerald-300"
-                    }`}
-                    title={
-                      r.bias === null
-                        ? undefined
-                        : r.bias > 0.05
-                          ? "Overprediction on average"
-                          : r.bias < -0.05
-                            ? "Underprediction on average"
-                            : "Unbiased on this window"
-                    }
-                  >
-                    {fmtSigned(r.bias)}
-                  </td>
-                  <td className="py-2 pr-2 tabular-nums text-slate-300">{fmtPct(r.precision)}</td>
-                  <td className="py-2 pr-2 tabular-nums text-slate-300">{fmtPct(r.recall)}</td>
-                  <td className="py-2 pr-2 tabular-nums text-slate-300">{r.f1?.toFixed(2)}</td>
-                  <td className="py-2 pr-2 tabular-nums text-slate-300">{r.brier?.toFixed(3)}</td>
-                  <td className="py-2 pr-2 tabular-nums text-slate-500">{r.n ?? "—"}</td>
-                </>
-              ) : (
-                <td colSpan={8} className="py-2 pr-2 text-[11px] leading-snug text-amber-300/90">
-                  {r.unavailableReason}
+          {rows.map((r) => {
+            const sourceName =
+              r.source === "ml"
+                ? t.sourceMl
+                : r.source === "nwp_raw"
+                ? t.sourceNwp
+                : r.source === "imd"
+                ? t.sourceImd
+                : t.sourceClim;
+            const kindText =
+              r.source === "ml"
+                ? t.kindMl
+                : r.source === "nwp_raw"
+                ? t.kindNwp
+                : r.source === "imd"
+                ? t.kindImd
+                : t.kindClim;
+            return (
+              <tr key={r.source} className="border-b border-line/60">
+                <td className="py-2 pr-2">
+                  <span className="block font-medium text-ink-900">{sourceName}</span>
+                  <span className="block text-[10px] leading-tight text-ink-400">{kindText}</span>
                 </td>
-              )}
-            </tr>
-          ))}
+                {r.available ? (
+                  <>
+                    <td className="py-2 pr-2 tabular-nums text-slate-200">{r.mae?.toFixed(2)}</td>
+                    <td className="py-2 pr-2 tabular-nums text-slate-300">{r.rmse?.toFixed(2)}</td>
+                    <td
+                      className={`py-2 pr-2 tabular-nums ${
+                        r.bias === null
+                          ? "text-slate-400"
+                          : r.bias > 0.05
+                            ? "text-amber-300"
+                            : r.bias < -0.05
+                              ? "text-sky-350"
+                              : "text-emerald-300"
+                      }`}
+                      title={
+                        r.bias === null
+                          ? undefined
+                          : language !== "en"
+                            ? r.bias > 0.05
+                              ? "अधिक अनुमान"
+                              : r.bias < -0.05
+                                ? "कम अनुमान"
+                                : "सटीक"
+                            : r.bias > 0.05
+                              ? "Overprediction on average"
+                              : r.bias < -0.05
+                                ? "Underprediction on average"
+                                : "Unbiased on average"
+                      }
+                    >
+                      {fmtSigned(r.bias)}
+                    </td>
+                    <td className="py-2 pr-2 tabular-nums text-slate-300">{fmtPct(r.precision)}</td>
+                    <td className="py-2 pr-2 tabular-nums text-slate-300">{fmtPct(r.recall)}</td>
+                    <td className="py-2 pr-2 tabular-nums text-slate-300">{r.f1?.toFixed(2)}</td>
+                    <td className="py-2 pr-2 tabular-nums text-slate-300">{r.brier?.toFixed(3)}</td>
+                    <td className="py-2 pr-2 tabular-nums text-slate-500">{r.n ?? "—"}</td>
+                  </>
+                ) : (
+                  <td colSpan={8} className="py-2 pr-2 text-[11px] leading-snug text-amber-300/90">
+                    {r.source === "imd" ? t.imdUnavailableReason : (r.unavailableReason ?? t.imdUnavailableReason)}
+                  </td>
+                )}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -242,6 +267,7 @@ export function ComparisonTable({ rows }: { rows: ComparisonRow[] }) {
 }
 
 export function BreakdownTable({ title, rows }: { title: string; rows: BreakdownRow[] }) {
+  const { t, language } = usePreferences();
   if (!rows.length) return null;
   return (
     <div>
@@ -249,31 +275,46 @@ export function BreakdownTable({ title, rows }: { title: string; rows: Breakdown
       <table className="mt-1.5 w-full text-left text-xs">
         <thead>
           <tr className="border-b border-line text-[10px] uppercase tracking-wider text-ink-400">
-            <th className="py-1.5 pr-2 font-semibold">Group</th>
-            <th className="py-1.5 pr-2 font-semibold">Days</th>
-            <th className="py-1.5 pr-2 font-semibold">ML MAE</th>
-            <th className="py-1.5 pr-2 font-semibold">NWP MAE</th>
-            <th className="py-1.5 pr-2 font-semibold">ML bias</th>
-            <th className="py-1.5 pr-2 font-semibold">ML F1</th>
+            <th className="py-1.5 pr-2 font-semibold">{t.colGroup}</th>
+            <th className="py-1.5 pr-2 font-semibold">{t.colDays}</th>
+            <th className="py-1.5 pr-2 font-semibold">{t.colMlMae}</th>
+            <th className="py-1.5 pr-2 font-semibold">{t.colNwpMae}</th>
+            <th className="py-1.5 pr-2 font-semibold">{t.colMlBias}</th>
+            <th className="py-1.5 pr-2 font-semibold">{t.colMlF1}</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
-            <tr key={r.group} className="border-b border-line/60">
-              <td className="py-1.5 pr-2 capitalize text-ink-900">{r.group.replace(/_/g, " ")}</td>
-              <td className="py-1.5 pr-2 tabular-nums text-ink-400">{r.n ?? "—"}</td>
-              <td className="py-1.5 pr-2 tabular-nums text-ink-900">
-                {r.mlMae?.toFixed(2) ?? "—"}
-              </td>
-              <td className="py-1.5 pr-2 tabular-nums text-weather-sun font-medium">
-                {r.nwpMae?.toFixed(2) ?? "—"}
-              </td>
-              <td className="py-1.5 pr-2 tabular-nums text-ink-600">{fmtSigned(r.mlBias)}</td>
-              <td className="py-1.5 pr-2 tabular-nums text-ink-600">
-                {r.mlF1?.toFixed(2) ?? "—"}
-              </td>
-            </tr>
-          ))}
+          {rows.map((r) => {
+            const rawG = r.group.toLowerCase();
+            const groupLabel =
+              language !== "en"
+                ? rawG.includes("postmonsoon") || rawG.includes("post_monsoon") || rawG.includes("post")
+                  ? t.seasonPostMonsoon
+                  : rawG.includes("monsoon")
+                  ? t.seasonMonsoon
+                  : rawG.includes("winter")
+                  ? t.seasonWinter
+                  : rawG.includes("pre")
+                  ? t.seasonPreMonsoon
+                  : r.group.replace(/_/g, " ")
+                : r.group.replace(/_/g, " ");
+            return (
+              <tr key={r.group} className="border-b border-line/60">
+                <td className="py-1.5 pr-2 capitalize text-ink-900">{groupLabel}</td>
+                <td className="py-1.5 pr-2 tabular-nums text-ink-400">{r.n ?? "—"}</td>
+                <td className="py-1.5 pr-2 tabular-nums text-ink-900">
+                  {r.mlMae?.toFixed(2) ?? "—"}
+                </td>
+                <td className="py-1.5 pr-2 tabular-nums text-weather-sun font-medium">
+                  {r.nwpMae?.toFixed(2) ?? "—"}
+                </td>
+                <td className="py-1.5 pr-2 tabular-nums text-ink-600">{fmtSigned(r.mlBias)}</td>
+                <td className="py-1.5 pr-2 tabular-nums text-ink-600">
+                  {r.mlF1?.toFixed(2) ?? "—"}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -281,26 +322,27 @@ export function BreakdownTable({ title, rows }: { title: string; rows: Breakdown
 }
 
 export function LeadTable({ rows }: { rows: LeadRow[] }) {
+  const { t } = usePreferences();
   if (!rows.length) return null;
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[560px] text-left text-xs">
         <thead>
           <tr className="border-b border-line text-[10px] uppercase tracking-wider text-ink-400">
-            <th className="py-2 pr-2 font-semibold">Lead</th>
-            <th className="py-2 pr-2 font-semibold">ML MAE</th>
-            <th className="py-2 pr-2 font-semibold">NWP MAE</th>
-            <th className="py-2 pr-2 font-semibold">Clim MAE</th>
-            <th className="py-2 pr-2 font-semibold">MAE skill vs NWP</th>
-            <th className="py-2 pr-2 font-semibold">ML F1</th>
-            <th className="py-2 pr-2 font-semibold">NWP F1</th>
-            <th className="py-2 pr-2 font-semibold">Interval coverage</th>
+            <th className="py-2 pr-2 font-semibold">{t.colLead}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colMlMae}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colNwpMae}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colClimMae}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colSkillVsNwp}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colMlF1}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colNwpF1}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colIntervalCoverage}</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.lead} className="border-b border-line/60">
-              <td className="py-2 pr-2 font-medium text-slate-200">{r.lead} day{r.lead > 1 ? "s" : ""}</td>
+              <td className="py-2 pr-2 font-medium text-slate-200">{r.lead} {t.daysCount}</td>
               <td className="py-2 pr-2 tabular-nums text-slate-200">{r.mlMae?.toFixed(2) ?? "—"}</td>
               <td className="py-2 pr-2 tabular-nums text-amber-300/90">{r.nwpMae?.toFixed(2) ?? "—"}</td>
               <td className="py-2 pr-2 tabular-nums text-slate-400">{r.climMae?.toFixed(2) ?? "—"}</td>
@@ -312,7 +354,7 @@ export function LeadTable({ rows }: { rows: LeadRow[] }) {
                       ? "text-emerald-300"
                       : "text-red-300"
                 }`}
-                title="1 − ML_MAE / NWP_MAE on the held-out test window (positive = ML better)"
+                title={t.colSkillVsNwp}
               >
                 {r.skillVsNwp === null ? "—" : `${(r.skillVsNwp * 100).toFixed(1)}%`}
               </td>
@@ -366,6 +408,7 @@ export function PredictionChart({
 }: {
   data: ReturnType<typeof buildPredictionChartData>;
 }) {
+  const { t } = usePreferences();
   return (
     <div className="h-48 w-full" role="img" aria-label="ML vs NWP predicted rainfall chart">
       <ResponsiveContainer width="100%" height="100%">
@@ -375,13 +418,13 @@ export function PredictionChart({
           <YAxis yAxisId="mm" tick={AXIS} width={34} />
           <YAxis yAxisId="p" orientation="right" domain={[0, 100]} tick={AXIS} width={30} />
           <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(56,189,248,0.05)" }} />
-          <Bar yAxisId="mm" dataKey="mlMm" name="ML rainfall (mm)" fill={C_ML} radius={[3, 3, 0, 0]} />
-          <Bar yAxisId="mm" dataKey="nwpMm" name="NWP forecast (mm)" fill={C_NWP} radius={[3, 3, 0, 0]} fillOpacity={0.75} />
+          <Bar yAxisId="mm" dataKey="mlMm" name={`${t.sourceMl} (mm)`} fill={C_ML} radius={[3, 3, 0, 0]} />
+          <Bar yAxisId="mm" dataKey="nwpMm" name={`${t.sourceNwp} (mm)`} fill={C_NWP} radius={[3, 3, 0, 0]} fillOpacity={0.75} />
           <Line
             yAxisId="mm"
             type="monotone"
             dataKey="climMm"
-            name="Climatology (mm)"
+            name={`${t.sourceClim} (mm)`}
             stroke={C_CLIM}
             strokeWidth={1.5}
             strokeDasharray="4 3"
@@ -391,7 +434,7 @@ export function PredictionChart({
             yAxisId="p"
             type="monotone"
             dataKey={(row: { prob: number | null }) => (row.prob === null ? null : row.prob * 100)}
-            name="ML rain probability (%)"
+            name={`${t.sourceMl} ${t.rain} %`}
             stroke={C_PROB}
             strokeWidth={2}
             dot={{ r: 2 }}
@@ -407,6 +450,7 @@ export function ObservedVsPredictedChart({
 }: {
   data: ReturnType<typeof buildVerificationChartData>;
 }) {
+  const { t } = usePreferences();
   return (
     <div className="h-48 w-full" role="img" aria-label="Observed vs predicted daily rainfall chart">
       <ResponsiveContainer width="100%" height="100%">
@@ -415,10 +459,10 @@ export function ObservedVsPredictedChart({
           <XAxis dataKey="label" tick={AXIS} interval="preserveStartEnd" minTickGap={14} />
           <YAxis tick={AXIS} width={34} />
           <Tooltip content={<ChartTip unit=" mm" />} cursor={{ stroke: GRID }} />
-          <Bar dataKey="observed" name="Observed (reanalysis)" fill={C_OBS} fillOpacity={0.35} radius={[2, 2, 0, 0]} />
-          <Line type="monotone" dataKey="ml" name="ML prediction" stroke={C_ML} strokeWidth={2} dot={false} connectNulls />
-          <Line type="monotone" dataKey="nwp" name="NWP forecast" stroke={C_NWP} strokeWidth={1.5} dot={false} />
-          <Line type="monotone" dataKey="clim" name="Climatology" stroke={C_CLIM} strokeWidth={1} strokeDasharray="3 3" dot={false} />
+          <Bar dataKey="observed" name={t.dsOpenMeteoHistoricalName} fill={C_OBS} fillOpacity={0.35} radius={[2, 2, 0, 0]} />
+          <Line type="monotone" dataKey="ml" name={t.sourceMl} stroke={C_ML} strokeWidth={2} dot={false} connectNulls />
+          <Line type="monotone" dataKey="nwp" name={t.sourceNwp} stroke={C_NWP} strokeWidth={1.5} dot={false} />
+          <Line type="monotone" dataKey="clim" name={t.sourceClim} stroke={C_CLIM} strokeWidth={1} strokeDasharray="3 3" dot={false} />
         </ComposedChart>
       </ResponsiveContainer>
     </div>
@@ -430,6 +474,7 @@ export function ErrorTrendChart({
 }: {
   data: ReturnType<typeof buildVerificationChartData>;
 }) {
+  const { t } = usePreferences();
   return (
     <div className="h-44 w-full" role="img" aria-label="Forecast error trend chart (7-day rolling MAE)">
       <ResponsiveContainer width="100%" height="100%">
@@ -441,7 +486,7 @@ export function ErrorTrendChart({
           <Line
             type="monotone"
             dataKey="nwpRolling"
-            name="NWP 7-day rolling MAE"
+            name={`${t.sourceNwp} 7D MAE`}
             stroke={C_NWP}
             strokeWidth={2}
             dot={false}
@@ -450,7 +495,7 @@ export function ErrorTrendChart({
           <Line
             type="monotone"
             dataKey="mlRolling"
-            name="ML 7-day rolling MAE"
+            name={`${t.sourceMl} 7D MAE`}
             stroke={C_ML}
             strokeWidth={2}
             dot={false}
@@ -477,121 +522,144 @@ export function LocationTransparency({
   sources: SourcesResponse | null;
   health: MlHealth | null;
 }) {
+  const { t, language } = usePreferences();
   const gpsFix = location.source === "device" ? readCachedFix() : null;
   const gpsMatches =
     gpsFix &&
     Math.abs(gpsFix.latitude - location.latitude) < 1e-4 &&
     Math.abs(gpsFix.longitude - location.longitude) < 1e-4;
 
+  const dataSourcesList = [
+    {
+      name: t.dsOpenMeteoHistoricalName,
+      detail: t.dsOpenMeteoHistoricalDetail,
+      status: "live",
+    },
+    {
+      name: t.dsOpenMeteoPreviousName,
+      detail: t.dsOpenMeteoPreviousDetail,
+      status: "live",
+    },
+    {
+      name: t.dsOpenMeteoForecastName,
+      detail: t.dsOpenMeteoForecastDetail,
+      status: "live",
+    },
+    {
+      name: t.dsImdPublicName,
+      detail: t.dsImdPublicDetail,
+      status: health?.imd_configured ? "ready" : "unavailable",
+    },
+    {
+      name: t.dsMausamModelsName,
+      detail: t.dsMausamModelsDetail,
+      status: "ready",
+    },
+  ];
+
   return (
     <div className="grid gap-2 sm:grid-cols-2">
       <dl className="space-y-1 rounded-xl border border-navy-700/60 p-3 text-[11px]">
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Coordinates</dt>
+          <dt className="text-slate-500">{t.coordinates}</dt>
           <dd className="text-right font-medium tabular-nums text-slate-200">
             {location.latitude.toFixed(5)}, {location.longitude.toFixed(5)}
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Resolved place</dt>
+          <dt className="text-slate-500">{t.resolvedPlace}</dt>
           <dd className="text-right text-slate-200">
-            {location.name}
-            {location.admin2 ? `, ${location.admin2}` : ""}
-            {location.admin1 ? `, ${location.admin1}` : ""}
+            {translateLocationName(location.name, language)}
+            {location.admin2 ? `, ${translateLocationName(location.admin2, language)}` : ""}
+            {location.admin1 ? `, ${translateLocationName(location.admin1, language)}` : ""}
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Location source</dt>
+          <dt className="text-slate-500">{t.locationSource}</dt>
           <dd className="text-right text-slate-200">
             {location.source === "device"
-              ? "Device GPS"
+              ? t.deviceGps
               : location.source === "manual"
-                ? "Manual coordinates"
+                ? t.manualCoords
                 : location.source === "demo-fixture"
-                  ? "Demo fixture"
-                  : "Geocoding search"}
+                  ? t.demoFixture
+                  : t.geocodingSearch}
           </dd>
         </div>
         {gpsMatches && gpsFix && (
           <div className="flex justify-between gap-3">
-            <dt className="text-slate-500">GPS accuracy</dt>
+            <dt className="text-slate-500">{t.gpsAccuracy}</dt>
             <dd className="text-right text-slate-200">
               ±{gpsFix.accuracyMeters} m · fix {fmtIsoDateTime(gpsFix.timestamp)}
             </dd>
           </div>
         )}
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Grid elevation</dt>
+          <dt className="text-slate-500">{t.gridElevation}</dt>
           <dd className="text-right tabular-nums text-slate-200">
             {predict?.location.elevation_m != null ? `${predict.location.elevation_m} m` : "—"}
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Resolution</dt>
+          <dt className="text-slate-500">{t.resolution}</dt>
           <dd className="text-right text-slate-300">
-            {predict?.location.grid_resolution ?? "~25 km grid (grid-cell values, not point data)"}
+            {t.resolutionDetail}
           </dd>
         </div>
       </dl>
 
       <dl className="space-y-1 rounded-xl border border-navy-700/60 p-3 text-[11px]">
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Prediction issued</dt>
+          <dt className="text-slate-500">{t.predictionIssued}</dt>
           <dd className="text-right text-slate-200">{fmtIsoDateTime(predict?.issued_at)}</dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Forecast horizon</dt>
+          <dt className="text-slate-500">{t.forecastHorizon}</dt>
           <dd className="text-right text-slate-200">
-            {predict ? `${predict.horizon_days} days (local dates from ${predict.local_date})` : "—"}
+            {predict ? `${predict.horizon_days} ${t.daysCount} (${predict.local_date})` : "—"}
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Model trained</dt>
+          <dt className="text-slate-500">{t.modelTrained}</dt>
           <dd className="text-right text-slate-200">{fmtIsoDateTime(health?.trained_at)}</dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">Data status</dt>
+          <dt className="text-slate-500">{t.dataStatus}</dt>
           <dd className="text-right">
             <span className="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
-              LIVE FETCH
+              {t.liveFetch}
             </span>{" "}
-            <span className="text-slate-400">(server-cached archives)</span>
+            <span className="text-slate-400">({t.serverCachedArchives})</span>
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">IMD official feed</dt>
+          <dt className="text-slate-500">{t.imdOfficialFeed}</dt>
           <dd className="text-right text-slate-300">
-            {health?.imd_configured
-              ? "API key configured — IMD comparisons enabled"
-              : "No API key — reported unavailable, never invented"}
+            {health?.imd_configured ? t.imdKeyConfigured : t.imdFeedStatus}
           </dd>
         </div>
       </dl>
 
-      {sources && (
-        <div className="sm:col-span-2">
-          <p className="label-caps">Data sources</p>
-          <ul className="mt-1.5 space-y-1 text-[11px] leading-relaxed text-slate-400">
-            {sources.sources.map((s) => (
-              <li key={s.key} className="flex items-start gap-2">
-                <span
-                  className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${
-                    s.status === "live" || s.status === "ready" || s.status === "configured"
-                      ? "bg-emerald-500"
-                      : s.status === "unavailable"
-                        ? "bg-amber-450"
-                        : "bg-slate-500"
-                  }`}
-                  aria-hidden="true"
-                />
-                <span>
-                  <strong className="font-semibold text-slate-300">{s.name}</strong> — {s.detail}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div className="sm:col-span-2">
+        <p className="label-caps">{t.dataSourcesTitle}</p>
+        <ul className="mt-1.5 space-y-1 text-[11px] leading-relaxed text-slate-400">
+          {dataSourcesList.map((s, idx) => (
+            <li key={idx} className="flex items-start gap-2">
+              <span
+                className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${
+                  s.status === "live" || s.status === "ready"
+                    ? "bg-emerald-500"
+                    : "bg-amber-450"
+                }`}
+                aria-hidden="true"
+              />
+              <span>
+                <strong className="font-semibold text-slate-300">{s.name}</strong> — {s.detail}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -607,7 +675,7 @@ export function RainIntelligence({
   location: GeoLocation;
   dataMode: DataMode;
 }) {
-  const { t } = usePreferences();
+  const { t, language } = usePreferences();
   const [backendState, setBackendState] = useState<BackendState>("checking");
   const [backendError, setBackendError] = useState<string | null>(null);
   const [health, setHealth] = useState<MlHealth | null>(null);
@@ -752,10 +820,29 @@ export function RainIntelligence({
   );
   const monthRows = useMemo(() => buildBreakdownRows(verification?.by_month), [verification]);
   const leadRows = useMemo(() => (metrics ? buildLeadRows(metrics) : []), [metrics]);
-  const headline = useMemo(
-    () => (verification ? skillHeadline(verification) : null),
-    [verification],
-  );
+  const headline = useMemo(() => {
+    if (!verification) return null;
+    const h = skillHeadline(verification);
+    if (language !== "en") {
+      const mae = verification.skill?.mae_skill_vs_nwp;
+      if (mae !== undefined && !Number.isNaN(mae)) {
+        const pct = (mae * 100).toFixed(1);
+        if (mae > 0) {
+          return {
+            ...h,
+            text: `इस समय-सीमा पर ML मॉडल की वर्षा MAE कच्ची NWP भविष्यवाणी की तुलना में ${pct}% बेहतर है (${verification.lead_days}-दिन की लीड)।`,
+          };
+        }
+        if (mae < 0) {
+          return {
+            ...h,
+            text: `इस समय-सीमा पर ML मॉडल की वर्षा MAE कच्ची NWP भविष्यवाणी की तुलना में ${Math.abs(Number(pct))}% अधिक है।`,
+          };
+        }
+      }
+    }
+    return h;
+  }, [verification, language]);
 
   return (
     <Card ariaLabel="Rainfall intelligence and forecast verification">
@@ -920,19 +1007,28 @@ export function RainIntelligence({
             </div>
 
             <p className="mb-3 text-[11px] text-slate-500">
-              Window {window.start} → {window.end} · forecast archive starts 2024-01-01 ·
-              observation reference lags ~3 days{window.clamped ? " (clamped to valid dates)" : ""}
+              {language !== "en"
+                ? `समय-सीमा ${window.start} → ${window.end} · पूर्वानुमान संग्रह आरंभ 2024-01-01 · संदर्भ प्रेक्षण अंतराल ~3 दिन`
+                : `Window ${window.start} → ${window.end} · forecast archive starts 2024-01-01 · observation reference lags ~3 days`}{window.clamped ? " (clamped)" : ""}
             </p>
 
             {verifyLoading && !verification && <SkeletonCard />}
             {verifyError && (
-              <ErrorState title="Verification failed" description={verifyError} onRetry={runVerification} />
+              <ErrorState
+                title={language !== "en" ? "सत्यापन विफल" : "Verification failed"}
+                description={verifyError}
+                onRetry={runVerification}
+              />
             )}
 
             {!verifyLoading && !verifyError && !verification && (
               <EmptyState
-                title="No verification results yet"
-                description="Run the verification to compare the ML model, the NWP forecast and the climatology baseline against observed rainfall for this window."
+                title={language !== "en" ? "कोई सत्यापन परिणाम नहीं" : "No verification results yet"}
+                description={
+                  language !== "en"
+                    ? "इस समय-सीमा के लिए वास्तविक वर्षा के सापेक्ष ML मॉडल, NWP पूर्वानुमान और जलवायु आधार रेखा की तुलना करने के लिए सत्यापन चलाएं।"
+                    : "Run the verification to compare the ML model, the NWP forecast and the climatology baseline against observed rainfall for this window."
+                }
                 action={
                   <button type="button" className="btn btn-primary" onClick={runVerification}>
                     {t.runVerification}
@@ -957,10 +1053,9 @@ export function RainIntelligence({
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-weather-sun" aria-hidden="true" />
                   )}
                   <span>
-                    {verification.window.note} Window role: <strong>{verification.window.role}</strong>
-                    {" · "}aligned days: {String(verification.alignment?.aligned_dates ?? "—")} ·
-                    split boundaries: train ≤ {verification.window.train_end}, val ≤{" "}
-                    {verification.window.val_end}.
+                    {language !== "en"
+                      ? `विंडो भूमिका: ${verification.window.role === "independent_test" ? "स्वतंत्र परीक्षण" : verification.window.role} · संरेखित दिन: ${String(verification.alignment?.aligned_dates ?? "—")} · विभाजन सीमा: ट्रेन ≤ ${verification.window.train_end}, सत्यापन ≤ ${verification.window.val_end}`
+                      : `${verification.window.note} Window role: ${verification.window.role} · aligned days: ${String(verification.alignment?.aligned_dates ?? "—")} · split boundaries: train ≤ ${verification.window.train_end}, val ≤ ${verification.window.val_end}`}
                   </span>
                 </div>
 
@@ -993,7 +1088,7 @@ export function RainIntelligence({
 
                 <div className="grid gap-4 lg:grid-cols-2">
                   <div>
-                    <p className="label-caps">Observed vs predicted (daily rainfall)</p>
+                    <p className="label-caps">{t.observedVsPredictedTitle}</p>
                     <ObservedVsPredictedChart data={verifyChart} />
                   </div>
                   <div>
@@ -1015,28 +1110,24 @@ export function RainIntelligence({
                   <div className="flex items-start gap-2 rounded-lg border border-line bg-paper-light px-3 py-2 text-[11px] text-ink-600">
                     <Database className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" aria-hidden="true" />
                     <span>
-                      <strong className="font-semibold text-ink-800">Optional IMD comparison unavailable:</strong>{" "}
-                      {verification.scores.imd.reason}
-                      {verification.imd_note ? ` ${verification.imd_note}` : ""}
+                      <strong className="font-semibold text-ink-800">{t.optionalImdUnavailable}:</strong>{" "}
+                      {t.imdUnavailableReason}
                     </span>
                   </div>
                 )}
                 {verification.scores.imd?.available && (
                   <div className="rounded-lg border border-line bg-surface p-3 text-[11px] text-ink-700">
                     <p className="font-semibold text-ink-900">
-                      IMD official forecast — {verification.scores.imd.matched_dates} matched days
+                      {t.kindImd} — {verification.scores.imd.matched_dates} {t.daysCount}
                     </p>
                     {verification.scores.imd.category && (
                       <p className="mt-1">
-                        Category accuracy:{" "}
-                        {fmtPct(verification.scores.imd.category.exact_accuracy)} exact ·{" "}
-                        {fmtPct(verification.scores.imd.category.within_one_class_accuracy)} within
-                        one IMD class (n={verification.scores.imd.category.n}).
+                        {fmtPct(verification.scores.imd.category.exact_accuracy)} (n={verification.scores.imd.category.n})
                       </p>
                     )}
                     {verification.scores.imd.amount && (
                       <p className="mt-1">
-                        Amount MAE {verification.scores.imd.amount.mae.toFixed(2)} mm · bias{" "}
+                        MAE {verification.scores.imd.amount.mae.toFixed(2)} mm · bias{" "}
                         {fmtSigned(verification.scores.imd.amount.bias)} mm.
                       </p>
                     )}
@@ -1047,8 +1138,8 @@ export function RainIntelligence({
                 )}
 
                 <div className="grid gap-4 lg:grid-cols-2">
-                  <BreakdownTable title="By season" rows={seasonRows} />
-                  <BreakdownTable title="By month" rows={monthRows} />
+                  <BreakdownTable title={t.bySeason} rows={seasonRows} />
+                  <BreakdownTable title={t.byMonth} rows={monthRows} />
                 </div>
               </div>
             )}
@@ -1060,7 +1151,7 @@ export function RainIntelligence({
           <section aria-label="Model evaluation metrics" className="border-t border-line pt-4">
             <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-ink-900">
               <ShieldCheck className="h-4 w-4 text-pine-600" aria-hidden="true" />
-              Held-out model evaluation (chronological test window)
+              {t.heldOutEvaluationTitle}
             </h3>
             {metricsError ? (
               <p className="text-xs text-weather-sun">{metricsError}</p>
@@ -1070,12 +1161,13 @@ export function RainIntelligence({
               <div className="space-y-2">
                 <LeadTable rows={leadRows} />
                 <p className="text-[11px] leading-relaxed text-ink-400">
-                  {metrics.disclaimer}
+                  {t.heldOutDisclaimer}
                 </p>
                 <ul className="space-y-1 text-[11px] leading-relaxed text-ink-400">
-                  {metrics.notes.slice(0, 4).map((n) => (
-                    <li key={n}>• {n}</li>
-                  ))}
+                  <li>• {t.noteObsReference}</li>
+                  <li>• {t.noteArchivedForecasts}</li>
+                  <li>• {t.noteImdForecasts}</li>
+                  <li>• {t.noteSplitsCalibration}</li>
                 </ul>
               </div>
             )}

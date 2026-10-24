@@ -320,6 +320,96 @@ export interface TranslationDict {
   allCitiesScope: string;
   dayLeadUnit: string;
   unableToLoadData: string;
+  colMae: string;
+  colRmse: string;
+  colBias: string;
+  colPrecision: string;
+  colRecall: string;
+  colF1: string;
+  colBrier: string;
+  colN: string;
+  sourceMl: string;
+  sourceNwp: string;
+  sourceClim: string;
+  sourceImd: string;
+  kindMl: string;
+  kindNwp: string;
+  kindClim: string;
+  kindImd: string;
+  imdUnavailableReason: string;
+  optionalImdUnavailable: string;
+  bySeason: string;
+  byMonth: string;
+  colGroup: string;
+  colDays: string;
+  colMlMae: string;
+  colNwpMae: string;
+  colClimMae: string;
+  colMlBias: string;
+  colMlF1: string;
+  colNwpF1: string;
+  colSkillVsNwp: string;
+  colIntervalCoverage: string;
+  heldOutEvaluationTitle: string;
+  heldOutDisclaimer: string;
+  noteObsReference: string;
+  noteArchivedForecasts: string;
+  noteImdForecasts: string;
+  noteSplitsCalibration: string;
+  coordinates: string;
+  resolvedPlace: string;
+  locationSource: string;
+  deviceGps: string;
+  manualCoords: string;
+  demoFixture: string;
+  geocodingSearch: string;
+  gpsAccuracy: string;
+  gridElevation: string;
+  resolution: string;
+  resolutionDetail: string;
+  predictionIssued: string;
+  forecastHorizon: string;
+  modelTrained: string;
+  dataStatus: string;
+  liveFetch: string;
+  serverCachedArchives: string;
+  imdOfficialFeed: string;
+  imdFeedStatus: string;
+  imdKeyConfigured: string;
+  dataSourcesTitle: string;
+  dsOpenMeteoHistoricalName: string;
+  dsOpenMeteoHistoricalDetail: string;
+  dsOpenMeteoPreviousName: string;
+  dsOpenMeteoPreviousDetail: string;
+  dsOpenMeteoForecastName: string;
+  dsOpenMeteoForecastDetail: string;
+  dsImdPublicName: string;
+  dsImdPublicDetail: string;
+  dsMausamModelsName: string;
+  dsMausamModelsDetail: string;
+  observedVsPredictedTitle: string;
+  seasonMonsoon: string;
+  seasonPostMonsoon: string;
+  seasonWinter: string;
+  seasonPreMonsoon: string;
+  observationPoint: string;
+  observationMatrix: string;
+  synopticOutlook: string;
+  rangeIndicator: string;
+  conditions: string;
+  rainAccumulation: string;
+  noneExpected: string;
+  maxRainRisk: string;
+  minimal: string;
+  thermalSpan: string;
+  relativeHumidity: string;
+  surfaceSpeed: string;
+  currentHourRate: string;
+  airParticulateLevel: string;
+  uvIndex: string;
+  solarExposureRate: string;
+  atmosphericClarity: string;
+  updated: string;
   weatherCodes: Record<number, string>;
 }
 
@@ -648,6 +738,96 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     allCitiesScope: "All training cities (pooled)",
     dayLeadUnit: "d",
     unableToLoadData: "Unable to load meteorological data",
+    colMae: "MAE",
+    colRmse: "RMSE",
+    colBias: "Bias",
+    colPrecision: "Precision",
+    colRecall: "Recall",
+    colF1: "F1",
+    colBrier: "Brier",
+    colN: "n",
+    sourceMl: "ML model",
+    sourceNwp: "NWP forecast",
+    sourceClim: "Climatology",
+    sourceImd: "IMD",
+    kindMl: "Mausam Sense ML model",
+    kindNwp: "Global NWP forecast (Open-Meteo archive)",
+    kindClim: "Day-of-year climatology baseline",
+    kindImd: "IMD official forecast",
+    imdUnavailableReason: "No IMD API key configured (IMD_API_KEY). Every api.imd.gov.in endpoint returns HTTP 401 without an issued key, so no official IMD numbers are shown - none are invented.",
+    optionalImdUnavailable: "Optional IMD comparison unavailable",
+    bySeason: "By season",
+    byMonth: "By month",
+    colGroup: "Group",
+    colDays: "Days",
+    colMlMae: "ML MAE",
+    colNwpMae: "NWP MAE",
+    colClimMae: "Clim MAE",
+    colMlBias: "ML bias",
+    colMlF1: "ML F1",
+    colNwpF1: "NWP F1",
+    colSkillVsNwp: "MAE skill vs NWP",
+    colIntervalCoverage: "Interval coverage",
+    heldOutEvaluationTitle: "Held-out model evaluation (chronological test window)",
+    heldOutDisclaimer: "Metrics are computed on a chronological held-out test window against reanalysis observations. They are NOT accuracy claims against rain-gauge measurements, and IMD is only included when real IMD data was available.",
+    noteObsReference: "Observation reference = Open-Meteo Historical Weather API (ERA5/ERA5-Land reanalysis grid ~0.25°/25 km), NOT rain-gauge readings.",
+    noteArchivedForecasts: "Archived forecasts = Open-Meteo Previous Runs API (global NWP model blend at fixed lead offsets), NOT IMD products.",
+    noteImdForecasts: "IMD forecasts are evaluated separately by the verification engine when an IMD API key is configured; no IMD results are reported without real IMD data.",
+    noteSplitsCalibration: "Splits are chronological; probability calibration uses a held-out validation slice and conformal intervals are calibrated on the full validation window (never on train or test). Coverage is reported as measured.",
+    coordinates: "Coordinates",
+    resolvedPlace: "Resolved place",
+    locationSource: "Location source",
+    deviceGps: "Device GPS",
+    manualCoords: "Manual coordinates",
+    demoFixture: "Demo fixture",
+    geocodingSearch: "Geocoding search",
+    gpsAccuracy: "GPS accuracy",
+    gridElevation: "Grid elevation",
+    resolution: "Resolution",
+    resolutionDetail: "reanalysis/forecast grid ~0.25° (~25 km grid); values are grid-cell estimates for this point, not a point measurement",
+    predictionIssued: "Prediction issued",
+    forecastHorizon: "Forecast horizon",
+    modelTrained: "Model trained",
+    dataStatus: "Data status",
+    liveFetch: "LIVE FETCH",
+    serverCachedArchives: "server-cached archives",
+    imdOfficialFeed: "IMD official feed",
+    imdFeedStatus: "No API key — reported unavailable, never invented",
+    imdKeyConfigured: "API key configured — IMD comparisons enabled",
+    dataSourcesTitle: "Data sources",
+    dsOpenMeteoHistoricalName: "Open-Meteo Historical Weather API (ERA5 / ERA5-Land reanalysis)",
+    dsOpenMeteoHistoricalDetail: "Reanalysis grid ~0.25° (~25 km). Used as the observation reference for verification and for lagged features. Grid-cell estimates, NOT rain gauges.",
+    dsOpenMeteoPreviousName: "Open-Meteo Previous Runs API (archived NWP forecasts)",
+    dsOpenMeteoPreviousDetail: "Global NWP model forecasts at fixed lead offsets (1–7 days ahead), archived from January 2024. This is NOT an IMD product.",
+    dsOpenMeteoForecastName: "Open-Meteo Forecast API (current model run)",
+    dsOpenMeteoForecastDetail: "Used at inference time for forecast features of upcoming days.",
+    dsImdPublicName: "India Meteorological Department (IMD) public API",
+    dsImdPublicDetail: "Requires an issued API key (HTTP 401 without one). No key configured — IMD comparisons reported unavailable.",
+    dsMausamModelsName: "Mausam Sense locally trained models",
+    dsMausamModelsDetail: "Trained offline (python -m ml.train) on the sources above; this service only loads saved artifacts for inference.",
+    observedVsPredictedTitle: "Observed vs predicted (daily rainfall)",
+    seasonMonsoon: "Monsoon (JJAS)",
+    seasonPostMonsoon: "Post-monsoon (ON)",
+    seasonWinter: "Winter (DJF)",
+    seasonPreMonsoon: "Pre-monsoon (MAM)",
+    observationPoint: "Observation Point",
+    observationMatrix: "Observation Matrix",
+    synopticOutlook: "Synoptic Outlook",
+    rangeIndicator: "Range indicator",
+    conditions: "Conditions",
+    rainAccumulation: "Rain Accumulation",
+    noneExpected: "None expected",
+    maxRainRisk: "Max Rain Risk",
+    minimal: "Minimal",
+    thermalSpan: "Thermal Span",
+    relativeHumidity: "Relative humidity",
+    surfaceSpeed: "Surface speed",
+    currentHourRate: "Current hour rate",
+    airParticulateLevel: "Air particulate level",
+    uvIndex: "UV Index",
+    solarExposureRate: "Solar exposure rate",
+    atmosphericClarity: "Atmospheric clarity",
+    updated: "Updated",
     days: {
       Sun: "Sun",
       Mon: "Mon",
@@ -953,6 +1133,96 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     allCitiesScope: "सभी शहर (संयुक्त)",
     dayLeadUnit: "दिन",
     unableToLoadData: "मौसम संबंधी डेटा लोड करने में असमर्थ",
+    colMae: "MAE",
+    colRmse: "RMSE",
+    colBias: "झुकाव (Bias)",
+    colPrecision: "परिशुद्धता (Precision)",
+    colRecall: "पुनर्प्राप्ति (Recall)",
+    colF1: "F1 स्कोर",
+    colBrier: "ब्रायर स्कोर",
+    colN: "नमूने (n)",
+    sourceMl: "एआई/एमएल मॉडल",
+    sourceNwp: "वैश्विक पूर्वानुमान (NWP)",
+    sourceClim: "जलवायु औसत",
+    sourceImd: "मौसम विभाग (IMD)",
+    kindMl: "मौसम सेंस एआई मॉडल",
+    kindNwp: "वैश्विक मौसम मॉडल (ओपन-मेटियो संग्रह)",
+    kindClim: "ऐतिहासिक दैनिक जलवायु आधार",
+    kindImd: "आईएमडी आधिकारिक पूर्वानुमान",
+    imdUnavailableReason: "कोई आईएमडी एपीआई कुंजी कॉन्फ़िगर नहीं है (IMD_API_KEY)। बिना अधिकृत कुंजी के कोई आधिकारिक आंकड़े प्रदर्शित नहीं किए जाते — कोई काल्पनिक मान नहीं गढ़ा जाता।",
+    optionalImdUnavailable: "आईएमडी तुलना अनुपलब्ध",
+    bySeason: "ऋतु अनुसार",
+    byMonth: "माह अनुसार",
+    colGroup: "समूह",
+    colDays: "दिन",
+    colMlMae: "एआई त्रुटि (ML MAE)",
+    colNwpMae: "वैश्विक मॉडल त्रुटि (NWP MAE)",
+    colClimMae: "जलवायु त्रुटि (Clim MAE)",
+    colMlBias: "एआई झुकाव (ML Bias)",
+    colMlF1: "एआई F1",
+    colNwpF1: "वैश्विक F1",
+    colSkillVsNwp: "सुधार दर (MAE Skill)",
+    colIntervalCoverage: "पूर्वानुमान अंतराल कवरेज",
+    heldOutEvaluationTitle: "स्वतंत्र ऐतिहासिक सत्यापन (क्रोनोलॉजिकल टेस्ट विंडो)",
+    heldOutDisclaimer: "सटीकता मेट्रिक्स ऐतिहासिक परीक्षण विंडो पर पुनर्विश्लेषण अवलोकनों के विरुद्ध निकाले गए हैं। ये वर्षा-मापी गेज के दावे नहीं हैं, और आईएमडी डेटा केवल अधिकृत होने पर ही शामिल होता है।",
+    noteObsReference: "अवलोकन संदर्भ = ओपन-मेटियो ऐतिहासिक मौसम एपीआई (ERA5/ERA5-Land पुनर्विश्लेषण ग्रिड ~25 किमी), वर्षामापी नहीं।",
+    noteArchivedForecasts: "संग्रहीत पूर्वानुमान = ओपन-मेटियो पूर्व रन एपीआई (निश्चित लीड ऑफसेट पर वैश्विक एनडब्ल्यूपी मॉडल)।",
+    noteImdForecasts: "आईएमडी पूर्वानुमान का मूल्यांकन तभी होता है जब एपीआई कुंजी सक्रिय हो; बिना वास्तविक डेटा कोई परिणाम नहीं दिया जाता।",
+    noteSplitsCalibration: "विभाजन क्रोनोलॉजिकल हैं; संभाव्यता कैलिब्रेशन स्वतंत्र सत्यापन विंडो पर किया गया है।",
+    coordinates: "निर्देशांक (Coordinates)",
+    resolvedPlace: "निर्धारित स्थान",
+    locationSource: "स्थान स्रोत",
+    deviceGps: "उपकरण जीपीएस (GPS)",
+    manualCoords: "मैन्युअल निर्देशांक",
+    demoFixture: "डिफ़ॉल्ट शहर",
+    geocodingSearch: "खोज द्वारा प्राप्त स्थान",
+    gpsAccuracy: "जीपीएस सटीकता",
+    gridElevation: "धरातल ऊंचाई",
+    resolution: "ग्रिड रिज़ॉल्यूशन",
+    resolutionDetail: "पुनर्विश्लेषण/पूर्वानुमान ग्रिड ~25 किमी; यह ग्रिड-सेल अनुमान है, एकल बिंदु माप नहीं।",
+    predictionIssued: "पूर्वानुमान जारी समय",
+    forecastHorizon: "पूर्वानुमान सीमा",
+    modelTrained: "मॉडल प्रशिक्षण समय",
+    dataStatus: "डेटा स्थिति",
+    liveFetch: "सक्रिय लाइव डेटा",
+    serverCachedArchives: "सर्वर-संग्रहित रिकॉर्ड",
+    imdOfficialFeed: "आईएमडी आधिकारिक फ़ीड",
+    imdFeedStatus: "कोई एपीआई कुंजी नहीं — काल्पनिक डेटा नहीं दिखाया जाता",
+    imdKeyConfigured: "कुंजी सक्रिय — आईएमडी तुलना उपलब्ध",
+    dataSourcesTitle: "डेटा स्रोत",
+    dsOpenMeteoHistoricalName: "ओपन-मेटियो ऐतिहासिक मौसम एपीआई (ERA5 / ERA5-Land)",
+    dsOpenMeteoHistoricalDetail: "पुनर्विश्लेषण ग्रिड ~25 किमी। सत्यापन और ऐतिहासिक सुविधाओं के लिए संदर्भ।",
+    dsOpenMeteoPreviousName: "ओपन-मेटियो पूर्व रन एपीआई (संग्रहित पूर्वानुमान)",
+    dsOpenMeteoPreviousDetail: "1-7 दिन अग्रिम वैश्विक एनडब्ल्यूपी मॉडल पूर्वानुमान, जनवरी 2024 से संग्रहित।",
+    dsOpenMeteoForecastName: "ओपन-मेटियो वर्तमान पूर्वानुमान एपीआई",
+    dsOpenMeteoForecastDetail: "आगामी दिनों के पूर्वानुमान सुविधाओं के लिए अनुमान समय पर उपयोग किया जाता है।",
+    dsImdPublicName: "भारतीय मौसम विज्ञान विभाग (IMD) सार्वजनिक एपीआई",
+    dsImdPublicDetail: "आधिकारिक कुंजी आवश्यक (HTTP 401)। कोई कुंजी सक्रिय नहीं — तुलना अनुपलब्ध।",
+    dsMausamModelsName: "मौसम सेंस स्थानीय प्रशिक्षित मॉडल",
+    dsMausamModelsDetail: "ऑफ़लाइन प्रशिक्षित मॉडल (ml.train); यह सेवा केवल सहेजे गए मॉडल आर्टिफैक्ट्स को लोड करती है।",
+    observedVsPredictedTitle: "वास्तविक बनाम अनुमानित (दैनिक वर्षा)",
+    seasonMonsoon: "मानसून (जून–सितंबर)",
+    seasonPostMonsoon: "मानसूनोत्तर (अक्टूबर–नवंबर)",
+    seasonWinter: "शीतकाल (दिसंबर–फरवरी)",
+    seasonPreMonsoon: "पूर्व-मानसून (मार्च–मई)",
+    observationPoint: "निरीक्षण केंद्र",
+    observationMatrix: "मौसम स्थिति विवरण",
+    synopticOutlook: "मौसम का पूर्वानुमान सारांश",
+    rangeIndicator: "तापमान विस्तार",
+    conditions: "मौसम की स्थिति",
+    rainAccumulation: "वर्षा संचयन",
+    noneExpected: "संभावना नहीं",
+    maxRainRisk: "अधिकतम वर्षा जोखिम",
+    minimal: "न्यूनतम",
+    thermalSpan: "तापमान अंतर",
+    relativeHumidity: "सापेक्ष आर्द्रता",
+    surfaceSpeed: "सतही गति",
+    currentHourRate: "वर्तमान दर",
+    airParticulateLevel: "हवा में कणों का स्तर",
+    uvIndex: "यूवी सूचकांक",
+    solarExposureRate: "सौर विकिरण दर",
+    atmosphericClarity: "वायुमंडलीय स्पष्टता",
+    updated: "अपडेट किया गया",
     days: {
       Sun: "रवि",
       Mon: "सोम",

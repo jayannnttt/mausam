@@ -25,6 +25,7 @@ import { Card, CardHeader, Meter, ErrorState } from "./ui/primitives";
 import { ProviderLine } from "./DataSourceBadge";
 import { ScoreTimeline, PollutionChart, TempHumidityChart } from "./charts";
 import { usePreferences } from "../state/preferencesContext";
+import { translateLocationName } from "../i18n/locations";
 import {
   ACTIVITY_PROFILES,
   FACTOR_LABELS,
@@ -264,7 +265,7 @@ export function ActivityPlanner({
                   {formatRange(best.start, best.end, prefs.timeFormat)}
                 </p>
                 <p className="mt-0.5 text-xs text-ink-500">
-                  {dataset.location.name} · {best.merged ? t.mergedGoodHours : `${ACTIVITY_PROFILES[activity].windowHours} ${t.hoursWindow}`}
+                  {translateLocationName(dataset.location.name, prefs.language)} · {best.merged ? t.mergedGoodHours : `${ACTIVITY_PROFILES[activity].windowHours} ${t.hoursWindow}`}
                 </p>
               </div>
               <div className="text-right">
