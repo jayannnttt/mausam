@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react";
+import { usePreferences } from "../state/preferencesContext";
 
 export type DashboardTab = "home" | "rain" | "wind" | "air-quality" | "prediction";
 
@@ -45,6 +46,7 @@ export function NavigationDrawer({
   onOpenLanguage,
   currentLanguageName,
 }: NavigationDrawerProps) {
+  const { t } = usePreferences();
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape key
@@ -67,34 +69,34 @@ export function NavigationDrawer({
   }[] = [
     {
       id: "home",
-      label: "Basic Dashboard",
-      subtitle: "Current temperature, high/low & 24h timeline",
+      label: t.tabHome,
+      subtitle: t.homeNavSub,
       icon: Home,
     },
     {
       id: "rain",
-      label: "Rain Report",
-      subtitle: "Rainfall totals, wet spells & 48h charts",
+      label: t.tabRain,
+      subtitle: t.rainNavSub,
       icon: CloudRain,
     },
     {
       id: "wind",
-      label: "Wind Report",
-      subtitle: "Surface speeds, gusts & 24h circulation",
+      label: t.tabWind,
+      subtitle: t.windNavSub,
       icon: Wind,
     },
     {
       id: "air-quality",
-      label: "Air Quality",
-      subtitle: "PM2.5, PM10 & outdoor activity planner",
+      label: t.tabAirQuality,
+      subtitle: t.airQualityNavSub,
       icon: Gauge,
     },
     {
       id: "prediction",
-      label: "Mausam Prediction",
-      subtitle: "Trained SIH 2026 AI models & verification",
+      label: t.tabPrediction,
+      subtitle: t.predictionNavSub,
       icon: Brain,
-      badge: "AI Model",
+      badge: t.smartBadge,
       highlight: true,
     },
   ];
@@ -125,7 +127,7 @@ export function NavigationDrawer({
                 Mausam Sense
               </h2>
               <p className="text-[11px] text-ink-500 font-editorial italic">
-                Precision Meteorological Menu
+                {t.navigationMenu}
               </p>
             </div>
           </div>
@@ -142,7 +144,7 @@ export function NavigationDrawer({
         {/* Menu Navigation Items */}
         <div className="flex-1 overflow-y-auto p-4 space-y-1.5">
           <p className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-400">
-            Navigation Dashboards
+            {t.navDashboards}
           </p>
 
           {navItems.map((item) => {
@@ -213,7 +215,7 @@ export function NavigationDrawer({
         {/* Drawer Footer Actions */}
         <div className="border-t border-line p-4 space-y-2 bg-surface/50">
           <p className="px-2 text-[10px] font-semibold uppercase tracking-wider text-ink-400">
-            System & Preferences
+            {t.settingsTitle}
           </p>
 
           <button
@@ -226,9 +228,9 @@ export function NavigationDrawer({
           >
             <div className="flex items-center gap-2.5">
               <Globe className="h-4 w-4 text-pine" />
-              <span>Language: <strong>{currentLanguageName}</strong></span>
+              <span>{t.changeLanguage}: <strong>{currentLanguageName}</strong></span>
             </div>
-            <span className="text-[11px] text-pine font-semibold">Change</span>
+            <span className="text-[11px] text-pine font-semibold">{t.changeLanguage}</span>
           </button>
 
           <button
@@ -241,7 +243,7 @@ export function NavigationDrawer({
           >
             <div className="flex items-center gap-2.5">
               <Settings className="h-4 w-4 text-ink-600" />
-              <span>Preferences & Units</span>
+              <span>{t.settings}</span>
             </div>
             <ChevronRight className="h-3.5 w-3.5 text-ink-400" />
           </button>

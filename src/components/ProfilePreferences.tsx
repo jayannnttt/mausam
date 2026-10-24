@@ -10,13 +10,13 @@ import { Modal } from "./ui/primitives";
 import { RotateCcw, Trash2 } from "lucide-react";
 
 export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { prefs, toggleInterest, update, resetOnboarding } = usePreferences();
+  const { prefs, toggleInterest, update, resetOnboarding, t } = usePreferences();
 
   return (
-    <Modal open={open} onClose={onClose} title="Settings & preferences">
+    <Modal open={open} onClose={onClose} title={t.settingsTitle}>
       <div className="space-y-5">
         <section>
-          <h3 className="label-caps">Interests (reorders your dashboard)</h3>
+          <h3 className="label-caps">{t.interests}</h3>
           <ul className="mt-2 space-y-1.5">
             {INTERESTS.map((i) => {
               const on = prefs.interests.includes(i.key);
@@ -42,10 +42,10 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
         </section>
 
         <section>
-          <h3 className="label-caps">Units & format</h3>
+          <h3 className="label-caps">{t.settings}</h3>
           <div className="mt-2 grid grid-cols-3 gap-2">
             <Select
-              label="Temperature"
+              label={t.tempUnit}
               value={prefs.temperatureUnit}
               options={[
                 ["C", "°C"],
@@ -54,7 +54,7 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               onChange={(v) => update({ temperatureUnit: v as "C" | "F" })}
             />
             <Select
-              label="Wind"
+              label={t.windUnit}
               value={prefs.windUnit}
               options={[
                 ["kmh", "km/h"],
@@ -63,7 +63,7 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               onChange={(v) => update({ windUnit: v as "kmh" | "mph" })}
             />
             <Select
-              label="Time"
+              label={t.timeFormat}
               value={prefs.timeFormat}
               options={[
                 ["12h", "12-hour"],
@@ -75,7 +75,7 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
         </section>
 
         <section>
-          <h3 className="label-caps">Air-quality awareness</h3>
+          <h3 className="label-caps">{t.airQualityAwareness}</h3>
           <label className="mt-2 flex cursor-pointer items-start gap-2.5 rounded-lg border border-line bg-surface px-3 py-2.5 transition-colors hover:border-line-strong">
             <input
               type="checkbox"
@@ -84,10 +84,9 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               className="mt-0.5 h-4 w-4 accent-pine-600"
             />
             <span>
-              <span className="block text-sm font-medium text-ink-900">Heightened air-quality awareness</span>
+              <span className="block text-sm font-medium text-ink-900">{t.airQualityAwareness}</span>
               <span className="block text-xs text-ink-500">
-                Tighter PM2.5 thresholds in activity suggestions. This is a preference, not a
-                medical profile — Mausam Sense never asks for diagnoses.
+                {t.airQualityAwarenessDesc}
               </span>
             </span>
           </label>

@@ -548,10 +548,6 @@ export function LocationTransparency({
           <dd className="text-right text-slate-200">{fmtIsoDateTime(health?.trained_at)}</dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-slate-500">API endpoint</dt>
-          <dd className="break-all text-right text-slate-400">{ML_API_BASE}</dd>
-        </div>
-        <div className="flex justify-between gap-3">
           <dt className="text-slate-500">Data status</dt>
           <dd className="text-right">
             <span className="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300">

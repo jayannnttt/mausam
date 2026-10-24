@@ -26,6 +26,8 @@ import { RainfallChart, RainProbabilityChart } from "./charts";
 import { formatRange, formatTemp, todayIso } from "../utils/format";
 import { ProviderLine } from "./DataSourceBadge";
 
+import { getTranslation } from "../i18n/translations";
+
 const TONE_CHIP: Record<string, string> = {
   alert: "border-weather-alert/40 bg-weather-alert/10 text-weather-alert",
   watch: "border-weather-sun/40 bg-weather-sun/10 text-ink-950",
@@ -40,13 +42,14 @@ export function RainReport({
   dataset: WeatherDataset;
   prefs: Preferences;
 }) {
+  const t = getTranslation(prefs.language);
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const outlook = useMemo(() => buildFarmOutlook(dataset), [dataset]);
 
   if (dataset.mode === "UNAVAILABLE" || dataset.hourly.length === 0) {
     return (
       <Card>
-        <CardHeader title="Rainfall & Precipitation Report" icon={<CloudRain className="h-4 w-4 text-weather-rain" />} />
+        <CardHeader title={t.rainReportTitle} icon={<CloudRain className="h-4 w-4 text-weather-rain" />} />
         <div className="p-5">
           <EmptyState
             title="Precipitation data unavailable"
@@ -74,7 +77,7 @@ export function RainReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Current Rain Rate
+              {t.currentRainRate}
             </span>
             <div className="rounded-lg bg-weather-rain/10 p-2 text-weather-rain">
               <Umbrella className="h-4 w-4" />
@@ -88,7 +91,7 @@ export function RainReport({
               <span className="text-sm font-semibold text-ink-600">mm / hr</span>
             </div>
             <p className="mt-1 text-xs font-medium text-ink-500">
-              {currentRate > 0 ? "Active precipitation detected" : "No surface rain currently"}
+              {currentRate > 0 ? t.activeRainDetected : t.noRainCurrently}
             </p>
           </div>
         </Card>
@@ -97,7 +100,7 @@ export function RainReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Next 24h Accumulation
+              {t.next24hAccumulation}
             </span>
             <div className="rounded-lg bg-weather-rain/10 p-2 text-weather-rain">
               <Droplets className="h-4 w-4" />
@@ -111,7 +114,7 @@ export function RainReport({
               <span className="text-sm font-semibold text-ink-600">mm</span>
             </div>
             <p className="mt-1 text-xs text-ink-500">
-              Peak probability: {outlook.periods[0]?.maxProbabilityPct ?? 0}%
+              {t.chanceOfRain}: {outlook.periods[0]?.maxProbabilityPct ?? 0}%
             </p>
           </div>
         </Card>
@@ -120,7 +123,7 @@ export function RainReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Next 48h Accumulation
+              {t.rainTotal48h}
             </span>
             <div className="rounded-lg bg-pine/10 p-2 text-pine">
               <Droplets className="h-4 w-4" />
@@ -134,7 +137,7 @@ export function RainReport({
               <span className="text-sm font-semibold text-ink-600">mm</span>
             </div>
             <p className="mt-1 text-xs text-ink-500">
-              Peak probability: {outlook.periods[1]?.maxProbabilityPct ?? 0}%
+              {t.chanceOfRain}: {outlook.periods[1]?.maxProbabilityPct ?? 0}%
             </p>
           </div>
         </Card>
@@ -237,8 +240,8 @@ export function RainReport({
         {next48.length > 0 && (
           <Card>
             <CardHeader
-              title="48-Hour Rain Probability Timeline"
-              subtitle="Hourly likelihood of precipitation (%)"
+              title={t.hourlyRainProb}
+              subtitle={t.chanceOfRainByHour}
               icon={<CloudRain className="h-4 w-4 text-weather-rain" />}
             />
             <div className="p-4 sm:p-5">
@@ -257,8 +260,8 @@ export function RainReport({
         {/* Daily Rainfall Forecast Chart */}
         <Card>
           <CardHeader
-            title="Daily Rainfall Outlook & Peak Risk"
-            subtitle="Expected accumulation (mm) and max daily probability (%)"
+            title={t.dailyRainOutlook}
+            subtitle={t.dailyRainSubtitle}
             icon={<CalendarDays className="h-4 w-4 text-pine" />}
           />
           <div className="p-4 sm:p-5">
@@ -278,8 +281,8 @@ export function RainReport({
       {dataset.advisories && dataset.advisories.length > 0 && (
         <Card>
           <CardHeader
-            title="Official Meteorological & Agricultural Bulletin"
-            subtitle="Separated from automated forecast summaries"
+            title={t.officialBulletin}
+            subtitle={t.viewOfficialAdvisory}
             icon={<FileText className="h-4 w-4 text-pine" />}
           />
           <div className="p-4 sm:p-5 space-y-3">
@@ -297,19 +300,13 @@ export function RainReport({
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-pine hover:underline"
                   >
-                    View official advisory
+                    {t.viewOfficialAdvisory}
                   </a>
                 )}
               </div>
             ))}
           </div>
         </Card>
-      )}
-
-      {dataset.providers.weather && (
-        <div className="text-[11px] text-ink-500">
-          <ProviderLine {...dataset.providers.weather} />
-        </div>
       )}
     </div>
   );

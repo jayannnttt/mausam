@@ -432,7 +432,7 @@ export function CurrentWeatherCard({
               icon={<Gauge className="h-4 w-4 text-pine" aria-hidden="true" />}
               label={t.pm25}
               value={nowAq?.pm25 != null ? `${Math.round(nowAq.pm25)} µg/m³` : "—"}
-              detail="CAMS model estimate"
+              detail="Air particulate level"
             />
 
             <MetricTile
@@ -449,16 +449,6 @@ export function CurrentWeatherCard({
               detail="Atmospheric clarity"
             />
           </dl>
-        </div>
-
-        {/* Attribution & Provenance */}
-        <div className="border-t border-line pt-3 text-[11px] text-ink-500 space-y-1">
-          {dataset.providers.weather && (
-            <ProviderLine {...dataset.providers.weather} />
-          )}
-          {dataset.providers.airQuality && (
-            <ProviderLine {...dataset.providers.airQuality} />
-          )}
         </div>
       </div>
     </Card>

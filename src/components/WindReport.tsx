@@ -52,6 +52,8 @@ function getBeaufortScale(kmh: number): {
   return { scale: 10, label: "Storm / Violent Storm", description: "Seldom experienced inland; trees uprooted; considerable structural damage.", color: "text-weather-alert" };
 }
 
+import { getTranslation } from "../i18n/translations";
+
 export function WindReport({
   dataset,
   prefs,
@@ -59,6 +61,7 @@ export function WindReport({
   dataset: WeatherDataset;
   prefs: Preferences;
 }) {
+  const t = getTranslation(prefs.language);
   const currentSpeed = dataset.current?.windSpeedKmh ?? 0;
   const beaufort = getBeaufortScale(currentSpeed);
 
@@ -94,7 +97,7 @@ export function WindReport({
   if (dataset.mode === "UNAVAILABLE" || dataset.hourly.length === 0) {
     return (
       <Card>
-        <CardHeader title="Wind Report & Dynamics" icon={<Wind className="h-4 w-4 text-pine" />} />
+        <CardHeader title={t.windReportTitle} icon={<Wind className="h-4 w-4 text-pine" />} />
         <div className="p-5">
           <EmptyState
             title="Wind telemetry unavailable"
@@ -115,7 +118,7 @@ export function WindReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Current Surface Wind
+              {t.currentSurfaceWind}
             </span>
             <div className="rounded-lg bg-pine/10 p-2 text-pine">
               <Wind className="h-4 w-4" />
@@ -129,7 +132,7 @@ export function WindReport({
               <span className="text-sm font-semibold text-ink-600">{unitLabel}</span>
             </div>
             <p className={`mt-1 text-xs font-semibold ${beaufort.color}`}>
-              Beaufort Scale {beaufort.scale} · {beaufort.label}
+              {beaufort.label}
             </p>
           </div>
         </Card>
@@ -271,14 +274,13 @@ export function WindReport({
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-pine" />
-                Sustained Speed ({unitLabel})
+                {t.sustainedSpeed} ({unitLabel})
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-2.5 w-2.5 rounded-full bg-weather-sun" />
-                Estimated Gusts ({unitLabel})
+                {t.estimatedGusts} ({unitLabel})
               </span>
             </div>
-            <span className="text-[11px] text-ink-400">Model: Open-Meteo High Resolution Surface Wind</span>
           </div>
         </div>
       </Card>
@@ -288,15 +290,15 @@ export function WindReport({
         {/* Beaufort Scale Reference */}
         <Card>
           <CardHeader
-            title="Atmospheric Scale (Beaufort)"
-            subtitle="Current observational meteorological classification"
+            title={t.windScaleTitle}
+            subtitle={t.windScaleSub}
             icon={<Compass className="h-4 w-4 text-pine" />}
           />
           <div className="p-4 sm:p-5 space-y-3">
             <div className="rounded-lg border border-line bg-surface p-3.5">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-ink-950">
-                  Force {beaufort.scale} — {beaufort.label}
+                  {beaufort.label}
                 </span>
                 <span className={`text-xs font-semibold ${beaufort.color}`}>
                   {formatWind(currentSpeed, prefs.windUnit)}
@@ -309,20 +311,20 @@ export function WindReport({
 
             <div className="space-y-1.5 text-xs">
               <div className="flex items-center justify-between py-1 border-b border-line-subtle text-ink-600">
-                <span>0–5 km/h: Calm / Light Air</span>
-                <span className="text-pine font-medium">Safe for all</span>
+                <span>0–5 km/h</span>
+                <span className="text-pine font-medium">Safe & Calm</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-line-subtle text-ink-600">
-                <span>6–19 km/h: Light to Gentle Breeze</span>
-                <span className="text-pine font-medium">Ideal conditions</span>
+                <span>6–19 km/h</span>
+                <span className="text-pine font-medium">Pleasant Breeze</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-line-subtle text-ink-600">
-                <span>20–38 km/h: Moderate to Fresh Breeze</span>
-                <span className="text-weather-sun font-medium">Moderate resistance</span>
+                <span>20–38 km/h</span>
+                <span className="text-weather-sun font-medium">Moderate Wind</span>
               </div>
               <div className="flex items-center justify-between py-1 text-ink-600">
-                <span>39+ km/h: Strong Breeze to Gale</span>
-                <span className="text-weather-alert font-medium">Exercise caution</span>
+                <span>39+ km/h</span>
+                <span className="text-weather-alert font-medium">Caution Advised</span>
               </div>
             </div>
           </div>
@@ -331,21 +333,21 @@ export function WindReport({
         {/* Activity & Commute Impact Guidance */}
         <Card>
           <CardHeader
-            title="Transit & Activity Advisory"
-            subtitle="Impact on commuting, cycling, and outdoor recreation"
+            title={t.transitAdvisoryTitle}
+            subtitle={t.transitAdvisorySub}
             icon={<AlertCircle className="h-4 w-4 text-pine" />}
           />
           <div className="p-4 sm:p-5 space-y-3">
             <div className="flex items-start gap-3 rounded-lg border border-line bg-surface p-3">
               <Bike className="mt-0.5 h-4 w-4 shrink-0 text-pine" />
               <div>
-                <h4 className="text-xs font-semibold text-ink-900">Cycling & Two-Wheelers</h4>
+                <h4 className="text-xs font-semibold text-ink-900">{t.cyclingTwoWheelers}</h4>
                 <p className="mt-0.5 text-xs text-ink-600 leading-relaxed">
                   {currentSpeed < 20
-                    ? "Optimal conditions for cycling with low aerodynamic drag and stable handling."
+                    ? t.cyclingSafe
                     : currentSpeed < 35
-                    ? "Headwinds and crosswinds will require additional effort. Maintain a firm grip on open flyovers."
-                    : "High risk of sudden gusts on bridges and open corridors. Commute by four-wheeler or transit if possible."}
+                    ? t.cyclingModerate
+                    : t.cyclingCaution}
                 </p>
               </div>
             </div>
@@ -353,11 +355,11 @@ export function WindReport({
             <div className="flex items-start gap-3 rounded-lg border border-line bg-surface p-3">
               <Car className="mt-0.5 h-4 w-4 shrink-0 text-pine" />
               <div>
-                <h4 className="text-xs font-semibold text-ink-900">High-Profile Vehicles & Highway Driving</h4>
+                <h4 className="text-xs font-semibold text-ink-900">{t.highwayVehicles}</h4>
                 <p className="mt-0.5 text-xs text-ink-600 leading-relaxed">
                   {currentSpeed < 30
-                    ? "Normal highway driving conditions. Crosswinds negligible on standard transport routes."
-                    : "High-sided vehicles, trucks, and buses may experience lateral sway on open expressways."}
+                    ? t.drivingNormal
+                    : t.drivingCaution}
                 </p>
               </div>
             </div>
@@ -365,23 +367,17 @@ export function WindReport({
             <div className="flex items-start gap-3 rounded-lg border border-line bg-surface p-3">
               <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-pine" />
               <div>
-                <h4 className="text-xs font-semibold text-ink-900">Farming & Construction Hazards</h4>
+                <h4 className="text-xs font-semibold text-ink-900">{t.outdoorHazards}</h4>
                 <p className="mt-0.5 text-xs text-ink-600 leading-relaxed">
                   {currentSpeed < 15
-                    ? "Ideal window for field fertilization, pesticide spraying, and roofing works."
-                    : "Postpone chemical spraying to avoid chemical drift to neighboring fields or water bodies."}
+                    ? t.outdoorSafe
+                    : t.outdoorCaution}
                 </p>
               </div>
             </div>
           </div>
         </Card>
       </div>
-
-      {dataset.providers.weather && (
-        <div className="text-[11px] text-ink-500">
-          <ProviderLine {...dataset.providers.weather} />
-        </div>
-      )}
     </div>
   );
 }

@@ -24,6 +24,8 @@ import { ActivityPlanner } from "./ActivityPlanner";
 import { pm25Band } from "../engines/aqi";
 import { ProviderLine } from "./DataSourceBadge";
 
+import { getTranslation } from "../i18n/translations";
+
 export function AirQualityReport({
   dataset,
   prefs,
@@ -31,6 +33,7 @@ export function AirQualityReport({
   dataset: WeatherDataset;
   prefs: Preferences;
 }) {
+  const t = getTranslation(prefs.language);
   const nowIso = dataset.current?.time ?? dataset.hourly[0]?.time;
   const aqByTime = useMemo(() => {
     return new Map(dataset.hourlyAirQuality?.map((a) => [a.time, a]) ?? []);
@@ -60,7 +63,7 @@ export function AirQualityReport({
   if (dataset.mode === "UNAVAILABLE" || (!dataset.hourlyAirQuality && dataset.hourly.length === 0)) {
     return (
       <Card>
-        <CardHeader title="Air Quality Telemetry" icon={<Gauge className="h-4 w-4 text-pine" />} />
+        <CardHeader title={t.airQualityTitle} icon={<Gauge className="h-4 w-4 text-pine" />} />
         <div className="p-5">
           <EmptyState
             title="Air quality data unavailable"
@@ -79,7 +82,7 @@ export function AirQualityReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              PM2.5 Concentration
+              {t.pm25Concentration}
             </span>
             <div className="rounded-lg bg-pine/10 p-2 text-pine">
               <Gauge className="h-4 w-4" />
@@ -106,7 +109,7 @@ export function AirQualityReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              PM10 Coarse Dust
+              {t.pm10Concentration}
             </span>
             <div className="rounded-lg bg-weather-sun/10 p-2 text-weather-sun">
               <Wind className="h-4 w-4" />
@@ -127,7 +130,7 @@ export function AirQualityReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Sensitive Groups Risk
+              {t.healthRisk}
             </span>
             <div className="rounded-lg bg-weather-rain/10 p-2 text-weather-rain">
               <Heart className="h-4 w-4" />
@@ -144,33 +147,41 @@ export function AirQualityReport({
               }`}
             >
               {(pm25Val ?? 0) <= 30
-                ? "Low Health Risk"
+                ? t.lowHealthRisk
                 : (pm25Val ?? 0) <= 60
-                ? "Moderate Sensitivity"
-                : "Heightened Caution"}
+                ? t.moderateSensitivity
+                : t.heightenedCaution}
             </span>
             <p className="mt-1 text-xs text-ink-500">
               {(pm25Val ?? 0) <= 30
-                ? "Clean ambient conditions for all age groups"
-                : "Asthma & respiratory patients should limit intense exercise"}
+                ? t.airGoodDesc
+                : (pm25Val ?? 0) <= 60
+                ? t.airModerateDesc
+                : t.airPoorDesc}
             </p>
           </div>
         </Card>
 
-        {/* Model Transparency */}
+        {/* Air Quality Summary */}
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Data Source
+              {t.airQualitySummary}
             </span>
             <div className="rounded-lg bg-line-subtle p-2 text-ink-700">
               <Info className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-sm font-bold text-ink-900">Copernicus (CAMS)</span>
+            <span className="text-sm font-bold text-ink-900">
+              {(pm25Val ?? 0) <= 30
+                ? t.airQualityStatusGood
+                : (pm25Val ?? 0) <= 60
+                ? t.airQualityStatusModerate
+                : t.airQualityStatusPoor}
+            </span>
             <p className="mt-1 text-xs text-ink-500">
-              Global atmospheric chemistry model forecast. Not a raw ground sensor.
+              {t.airQualityStatusDesc}
             </p>
           </div>
         </Card>
@@ -180,8 +191,8 @@ export function AirQualityReport({
       {pollutionTimeline.length > 0 && (
         <Card>
           <CardHeader
-            title="24-Hour Particulate Concentration Forecast"
-            subtitle="PM2.5 (fine) and PM10 (coarse) in µg/m³ · Copernicus CAMS model"
+            title={t.pmTimelineTitle}
+            subtitle={t.pmTimelineSubtitle}
             icon={<Gauge className="h-4 w-4 text-pine" />}
           />
           <div className="p-4 sm:p-6">
@@ -198,20 +209,14 @@ export function AirQualityReport({
       <div>
         <div className="mb-3">
           <h3 className="text-base font-bold text-ink-950">
-            Outdoor Health Intelligence & Activity Windows
+            {t.activityPlannerTitle}
           </h3>
           <p className="text-xs text-ink-500">
-            Transparent rules-based scoring combining air quality, temperature, humidity, UV index, and rain risk.
+            {t.activityPlannerSub}
           </p>
         </div>
         <ActivityPlanner dataset={dataset} prefs={prefs} />
       </div>
-
-      {dataset.providers.airQuality && (
-        <div className="text-[11px] text-ink-500">
-          <ProviderLine {...dataset.providers.airQuality} />
-        </div>
-      )}
     </div>
   );
 }

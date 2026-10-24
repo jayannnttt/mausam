@@ -22,6 +22,8 @@ const SEVERITY_BADGE: Record<WeatherWarning["severity"], string> = {
   unknown: "text-ink-600 bg-line-subtle border-line",
 };
 
+import { getTranslation } from "../i18n/translations";
+
 export function WeatherAlertCard({
   dataset,
   prefs,
@@ -29,13 +31,14 @@ export function WeatherAlertCard({
   dataset: WeatherDataset;
   prefs: Preferences;
 }) {
+  const t = getTranslation(prefs.language);
   // If there are official bulletins, surface them prominently
   if (dataset.warnings.length > 0) {
     return (
       <Card ariaLabel="Official weather warnings" className="border-weather-alertBorder">
         <CardHeader
-          title="Official Weather Bulletin"
-          subtitle="Active meteorological warnings issued for this jurisdiction"
+          title={t.officialBulletin}
+          subtitle={t.viewOfficialAdvisory}
           icon={<AlertOctagon className="h-4 w-4 text-weather-alert" aria-hidden="true" />}
         />
         <ul className="divide-y divide-line">

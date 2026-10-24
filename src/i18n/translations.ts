@@ -6,6 +6,7 @@
 export interface TranslationDict {
   appTitle: string;
   appSubtitle: string;
+  appFooter: string;
   selectLanguage: string;
   selectLanguageSub: string;
   allOfficialLanguages: string;
@@ -53,6 +54,120 @@ export interface TranslationDict {
   now: string;
   latestModelAnalysis: string;
   chanceOfRain: string;
+  rain: string;
+  noRain: string;
+
+  // Navigation & Shell
+  tabHome: string;
+  tabRain: string;
+  tabWind: string;
+  tabAirQuality: string;
+  tabPrediction: string;
+  navDashboards: string;
+  navigationMenu: string;
+  homeNavSub: string;
+  rainNavSub: string;
+  windNavSub: string;
+  airQualityNavSub: string;
+  predictionNavSub: string;
+  smartBadge: string;
+  viewMode: string;
+  current: string;
+  backToHome: string;
+  horizontalScroll: string;
+  deepReports: string;
+  tapToOpen: string;
+  todaysOutlook: string;
+  meteorologicalInstrument: string;
+  precipitationLikely: string;
+  intenseHeat: string;
+  coolWeather: string;
+  calmWeather: string;
+  rainCardDesc: string;
+  windCardDesc: string;
+  airQualityCardDesc: string;
+  predictionCardDesc: string;
+
+  // Rain Report
+  rainReportTitle: string;
+  rainReportSubtitle: string;
+  currentRainRate: string;
+  activeRainDetected: string;
+  noRainCurrently: string;
+  next24hAccumulation: string;
+  expectedRainNext24h: string;
+  rainTotal48h: string;
+  accumulated2Days: string;
+  wetSpellsDetected: string;
+  precipitationWindows: string;
+  hourlyRainProb: string;
+  chanceOfRainByHour: string;
+  dailyRainOutlook: string;
+  dailyRainSubtitle: string;
+  officialBulletin: string;
+  viewOfficialAdvisory: string;
+
+  // Wind Report
+  windReportTitle: string;
+  windReportSubtitle: string;
+  currentSurfaceWind: string;
+  peakGustsNext24h: string;
+  windScaleLabel: string;
+  dominantDirection: string;
+  windTimelineTitle: string;
+  sustainedSpeed: string;
+  estimatedGusts: string;
+  windScaleTitle: string;
+  windScaleSub: string;
+  transitAdvisoryTitle: string;
+  transitAdvisorySub: string;
+  cyclingTwoWheelers: string;
+  highwayVehicles: string;
+  outdoorHazards: string;
+  cyclingSafe: string;
+  cyclingModerate: string;
+  cyclingCaution: string;
+  drivingNormal: string;
+  drivingCaution: string;
+  outdoorSafe: string;
+  outdoorCaution: string;
+
+  // Air Quality
+  airQualityTitle: string;
+  airQualitySubtitle: string;
+  pm25Concentration: string;
+  pm10Concentration: string;
+  healthRisk: string;
+  airQualitySummary: string;
+  lowHealthRisk: string;
+  moderateSensitivity: string;
+  heightenedCaution: string;
+  airGoodDesc: string;
+  airModerateDesc: string;
+  airPoorDesc: string;
+  airQualityStatusGood: string;
+  airQualityStatusModerate: string;
+  airQualityStatusPoor: string;
+  airQualityStatusDesc: string;
+  pmTimelineTitle: string;
+  pmTimelineSubtitle: string;
+  activityPlannerTitle: string;
+  activityPlannerSub: string;
+
+  // Prediction
+  predictionTitle: string;
+  predictionSubtitle: string;
+
+  // Settings & Preferences
+  settingsTitle: string;
+  tempUnit: string;
+  windUnit: string;
+  timeFormat: string;
+  airQualityAwareness: string;
+  airQualityAwarenessDesc: string;
+  close: string;
+  save: string;
+
   days: {
     Sun: string;
     Mon: string;
@@ -100,6 +215,7 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
   en: {
     appTitle: "Mausam Sense",
     appSubtitle: "Weather that understands your day",
+    appFooter: "Weather that understands your day. Clean, real-time localized forecasts and alerts.",
     selectLanguage: "Choose Your Language",
     selectLanguageSub: "Select any of India's 22 official languages to personalize your experience",
     allOfficialLanguages: "All 22 Official Indian Languages",
@@ -147,6 +263,107 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     now: "Now",
     latestModelAnalysis: "Latest model analysis",
     chanceOfRain: "chance of rain",
+    rain: "rain",
+    noRain: "No rain",
+    tabHome: "Basic Dashboard",
+    tabRain: "Rain Report",
+    tabWind: "Wind Report",
+    tabAirQuality: "Air Quality",
+    tabPrediction: "Smart Prediction",
+    navDashboards: "Navigation Dashboards",
+    navigationMenu: "Navigation Menu",
+    homeNavSub: "Current temperature, high/low & 24h timeline",
+    rainNavSub: "Rainfall totals, wet spells & 48h charts",
+    windNavSub: "Surface speeds, gusts & 24h circulation",
+    airQualityNavSub: "PM2.5, PM10 & outdoor health guidance",
+    predictionNavSub: "Smart weather forecast & rain probability",
+    smartBadge: "Smart AI",
+    viewMode: "View Mode:",
+    current: "Current:",
+    backToHome: "Back to Basic Dashboard",
+    horizontalScroll: "Horizontal scroll",
+    deepReports: "Deep Intelligence Reports",
+    tapToOpen: "Tap to open dashboard",
+    todaysOutlook: "Today's Outlook",
+    meteorologicalInstrument: "Live Weather & Forecast",
+    precipitationLikely: "Precipitation likely during the day",
+    intenseHeat: "Intense midday heat. Stay hydrated during peak sunlight.",
+    coolWeather: "Cool airmass settled over the region. Light layers advised.",
+    calmWeather: "Calm, stable meteorological conditions throughout the day.",
+    rainCardDesc: "Totals (24/48/72h), wet spells & probability charts",
+    windCardDesc: "Surface speed, gusts & 24h circulation trend",
+    airQualityCardDesc: "PM2.5, PM10 timeline & outdoor activity planner",
+    predictionCardDesc: "Smart AI forecast, confidence levels & rain probability",
+    rainReportTitle: "Rain Report",
+    rainReportSubtitle: "Rainfall totals, hourly precipitation probabilities, and wet-spell timing",
+    currentRainRate: "Current Rain Rate",
+    activeRainDetected: "Active precipitation detected",
+    noRainCurrently: "No surface rain currently",
+    next24hAccumulation: "Next 24h Accumulation",
+    expectedRainNext24h: "Expected rainfall over next 24 hours",
+    rainTotal48h: "48h Rain Total",
+    accumulated2Days: "Accumulated precipitation over 2 days",
+    wetSpellsDetected: "Wet Spells Detected",
+    precipitationWindows: "Continuous precipitation windows",
+    hourlyRainProb: "Hourly Rain Probability (Next 48 Hours)",
+    chanceOfRainByHour: "Chance of precipitation (%) by hour",
+    dailyRainOutlook: "Daily Rainfall Outlook & Peak Risk",
+    dailyRainSubtitle: "Expected accumulation (mm) and max daily probability (%)",
+    officialBulletin: "Official Meteorological & Agricultural Bulletin",
+    viewOfficialAdvisory: "View official bulletin",
+    windReportTitle: "Wind Report",
+    windReportSubtitle: "Surface wind velocities, peak gusts, and 24h circulation trend",
+    currentSurfaceWind: "Current Surface Wind",
+    peakGustsNext24h: "Peak Gusts (Next 24h)",
+    windScaleLabel: "Wind Scale Classification",
+    dominantDirection: "Wind Direction & Scale",
+    windTimelineTitle: "24-Hour Wind Velocity & Gust Trend",
+    sustainedSpeed: "Sustained Speed",
+    estimatedGusts: "Estimated Gusts",
+    windScaleTitle: "Atmospheric Scale (Beaufort)",
+    windScaleSub: "Current observational meteorological classification",
+    transitAdvisoryTitle: "Transit & Activity Advisory",
+    transitAdvisorySub: "Impact on commuting, cycling, and outdoor recreation",
+    cyclingTwoWheelers: "Cycling & Two-Wheelers",
+    highwayVehicles: "High-Profile Vehicles & Highway Driving",
+    outdoorHazards: "Farming & Outdoor Hazards",
+    cyclingSafe: "Optimal conditions for cycling with low aerodynamic drag and stable handling.",
+    cyclingModerate: "Headwinds and crosswinds will require additional effort. Maintain a firm grip on open roads.",
+    cyclingCaution: "High risk of sudden gusts on bridges and open corridors. Commute by four-wheeler or transit if possible.",
+    drivingNormal: "Normal highway driving conditions. Crosswinds negligible on standard transport routes.",
+    drivingCaution: "High-sided vehicles, trucks, and buses may experience lateral sway on open expressways.",
+    outdoorSafe: "Ideal window for outdoor activities, pesticide spraying, and roofing works.",
+    outdoorCaution: "Postpone chemical spraying and secure loose outdoor equipment to avoid wind hazard.",
+    airQualityTitle: "Air Quality & Outdoor Health",
+    airQualitySubtitle: "Atmospheric particulates and transparent outdoor activity recommendations",
+    pm25Concentration: "PM2.5 Concentration",
+    pm10Concentration: "PM10 Coarse Dust",
+    healthRisk: "Sensitive Groups Risk",
+    airQualitySummary: "Air Quality Status",
+    lowHealthRisk: "Low Health Risk",
+    moderateSensitivity: "Moderate Sensitivity",
+    heightenedCaution: "Heightened Caution",
+    airGoodDesc: "Clean ambient conditions for all age groups",
+    airModerateDesc: "Sensitive individuals should limit strenuous outdoor exertion",
+    airPoorDesc: "Asthma & respiratory patients should limit intense exercise",
+    airQualityStatusGood: "Clean & Healthy",
+    airQualityStatusModerate: "Moderate Quality",
+    airQualityStatusPoor: "Caution Advised",
+    airQualityStatusDesc: "Real-time atmospheric particulate analysis",
+    pmTimelineTitle: "24-Hour Particulate Concentration Forecast",
+    pmTimelineSubtitle: "PM2.5 (fine) and PM10 (coarse) in µg/m³",
+    activityPlannerTitle: "Outdoor Health Intelligence & Activity Windows",
+    activityPlannerSub: "Clear recommendations combining air quality, temperature, humidity, UV index, and rain risk",
+    predictionTitle: "Smart Weather Prediction",
+    predictionSubtitle: "Machine learning weather models, confidence intervals, and rain forecasting",
+    settingsTitle: "Settings & Preferences",
+    tempUnit: "Temperature",
+    windUnit: "Wind",
+    timeFormat: "Time",
+    airQualityAwareness: "Heightened air-quality awareness",
+    airQualityAwarenessDesc: "Tighter PM2.5 thresholds in activity suggestions for sensitive lungs.",
+    close: "Close",
+    save: "Save",
     days: {
       Sun: "Sun",
       Mon: "Mon",
@@ -162,6 +379,7 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
   hi: {
     appTitle: "मौसम सेंस (Mausam Sense)",
     appSubtitle: "मौसम जो आपके दिन को समझे",
+    appFooter: "मौसम जो आपके दिन को समझे। सटीक स्थानीय पूर्वानुमान और चेतावनी।",
     selectLanguage: "अपनी भाषा चुनें",
     selectLanguageSub: "पूरे डैशबोर्ड के लिए भारत की 22 आधिकारिक भाषाओं में से चुनें",
     allOfficialLanguages: "भारत की सभी 22 आधिकारिक भाषाएं",
@@ -193,6 +411,14 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     farming: "खेती व बागवानी",
     comfort: "दैनिक मौसम सुविधा",
     commuting: "यात्रा व आवागमन",
+    whoAreYou: "क्या आपकी प्राथमिक ज़रूरत है?",
+    whoAreYouSub: "खेती या दैनिक यात्रा के अनुसार डैशबोर्ड सेट करें",
+    farmerPersona: "किसान व उत्पादक",
+    farmerPersonaDesc: "फसल वर्षा, सिंचाई का समय व मिट्टी की स्थिति",
+    commuterPersona: "दैनिक यात्री व निवासी",
+    commuterPersonaDesc: "सड़क यात्रा, बारिश का समय व गर्मी से बचाव",
+    farmerMode: "किसान मोड",
+    commuterMode: "दैनिक यात्री",
     back: "पीछे",
     continue: "आगे बढ़ें",
     openDashboard: "मेरा डैशबोर्ड खोलें",
@@ -201,6 +427,107 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     now: "अभी",
     latestModelAnalysis: "नवीनतम मौसम विश्लेषण",
     chanceOfRain: "बारिश की संभावना",
+    rain: "बारिश",
+    noRain: "बारिश नहीं",
+    tabHome: "मुख्य डैशबोर्ड",
+    tabRain: "वर्षा रिपोर्ट",
+    tabWind: "हवा रिपोर्ट",
+    tabAirQuality: "वायु गुणवत्ता",
+    tabPrediction: "सटीक मौसम अनुमान",
+    navDashboards: "नेविगेशन डैशबोर्ड",
+    navigationMenu: "नेविगेशन मेनू",
+    homeNavSub: "वर्तमान तापमान, उच्च/निम्न व 24 घंटे का पूर्वानुमान",
+    rainNavSub: "वर्षा विवरण, आर्द्र समय व 48 घंटे के चार्ट",
+    windNavSub: "हवा की गति, झोंके व 24 घंटे का वायु संचार",
+    airQualityNavSub: "पीएम 2.5, पीएम 10 व बाहरी स्वास्थ्य सलाह",
+    predictionNavSub: "स्मार्ट एआई मौसम अनुमान व वर्षा संभावना",
+    smartBadge: "स्मार्ट एआई",
+    viewMode: "देखने का मोड:",
+    current: "वर्तमान:",
+    backToHome: "मुख्य डैशबोर्ड पर वापस जाएं",
+    horizontalScroll: "आगे देखने के लिए स्क्रॉल करें",
+    deepReports: "विस्तृत मौसम रिपोर्ट्स",
+    tapToOpen: "खोलने के लिए टैप करें",
+    todaysOutlook: "आज का मौसम दृष्टिकोण",
+    meteorologicalInstrument: "सटीक मौसम प्रणाली",
+    precipitationLikely: "दिन के दौरान बारिश की संभावना",
+    intenseHeat: "तीव्र गर्मी। दोपहर में पर्याप्त पानी पिएं।",
+    coolWeather: "शीतल मौसम। हल्के गर्म कपड़े पहनें।",
+    calmWeather: "शांत और अनुकूल मौसम स्थितियां।",
+    rainCardDesc: "कुल वर्षा (24/48/72 घंटे) व वर्षा संभावना चार्ट",
+    windCardDesc: "हवा की गति, झोंके और 24 घंटे का प्रवाह",
+    airQualityCardDesc: "पीएम 2.5, पीएम 10 व बाहरी गतिविधि योजना",
+    predictionCardDesc: "स्मार्ट एआई मौसम अनुमान व विश्वास स्तर",
+    rainReportTitle: "वर्षा व बारिश रिपोर्ट",
+    rainReportSubtitle: "कुल वर्षा, प्रति घंटे बारिश की संभावना और गीला मौसम समय",
+    currentRainRate: "वर्तमान वर्षा दर",
+    activeRainDetected: "बारिश जारी है",
+    noRainCurrently: "वर्तमान में बारिश नहीं हो रही",
+    next24hAccumulation: "अगले 24 घंटे में कुल वर्षा",
+    expectedRainNext24h: "अगले 24 घंटों में अनुमानित वर्षा",
+    rainTotal48h: "48 घंटे की कुल वर्षा",
+    accumulated2Days: "2 दिनों में संचित संभावित वर्षा",
+    wetSpellsDetected: "सक्रिय वर्षा समय",
+    precipitationWindows: "निरंतर बारिश की समयावधि",
+    hourlyRainProb: "प्रति घंटा बारिश की संभावना (अगले 48 घंटे)",
+    chanceOfRainByHour: "प्रति घंटा बारिश की संभावना (%)",
+    dailyRainOutlook: "दैनिक वर्षा दृष्टिकोण व अधिकतम जोखिम",
+    dailyRainSubtitle: "अनुमानित मात्रा (मिमी) और दैनिक अधिकतम संभावना (%)",
+    officialBulletin: "आधिकारिक मौसम व कृषि बुलेटिन",
+    viewOfficialAdvisory: "आधिकारिक सलाह देखें",
+    windReportTitle: "हवा व वायु गति रिपोर्ट",
+    windReportSubtitle: "सतह पर हवा की गति, झोंके और 24 घंटे का वायु संचार",
+    currentSurfaceWind: "वर्तमान हवा की गति",
+    peakGustsNext24h: "अधिकतम झोंके (अगले 24 घंटे)",
+    windScaleLabel: "वायु गति पैमाना",
+    dominantDirection: "हवा की दिशा व पैमाना",
+    windTimelineTitle: "24-घंटे हवा की गति और झोंकों का रुझान",
+    sustainedSpeed: "स्थिर गति",
+    estimatedGusts: "अनुमानित झोंके",
+    windScaleTitle: "वायुमंडलीय पैमाना (ब्यूफोर्ट)",
+    windScaleSub: "वर्तमान मौसम संबंधी वर्गीकरण",
+    transitAdvisoryTitle: "यात्रा व गतिविधि सलाह",
+    transitAdvisorySub: "सड़क यात्रा, दोपहिया और बाहरी गतिविधियों पर प्रभाव",
+    cyclingTwoWheelers: "साइकिल व दोपहिया वाहन",
+    highwayVehicles: "हाइवे व भारी वाहन",
+    outdoorHazards: "खेती व बाहरी कार्य",
+    cyclingSafe: "साइकिल व दोपहिया के लिए अनुकूल व सुरक्षित स्थिति।",
+    cyclingModerate: "सामने से हवा का दबाव। खुले पुलों पर मजबूती से पकड़ें।",
+    cyclingCaution: "तेज़ हवा के झोंके। सावधानी से चलाएं या चार पहिया वाहन चुनें।",
+    drivingNormal: "हाइवे पर सामान्य व सुरक्षित ड्राइविंग स्थितियां।",
+    drivingCaution: "खुले एक्सप्रेसवे पर भारी वाहनों में हल्का विचलन संभव।",
+    outdoorSafe: "बाहरी काम, छिड़काव व फसल सुखाने के लिए आदर्श समय।",
+    outdoorCaution: "तेज़ हवा। कीटनाशक छिड़काव टालें और खुले सामान को सुरक्षित रखें।",
+    airQualityTitle: "वायु गुणवत्ता व बाहरी स्वास्थ्य",
+    airQualitySubtitle: "वायु प्रदूषण स्तर, सूक्ष्म कण और सुरक्षित बाहरी समय",
+    pm25Concentration: "पीएम 2.5 सांद्रता",
+    pm10Concentration: "पीएम 10 धूल कण",
+    healthRisk: "स्वास्थ्य संवेदनशीलता जोखिम",
+    airQualitySummary: "वायु गुणवत्ता स्थिति",
+    lowHealthRisk: "कम स्वास्थ्य जोखिम",
+    moderateSensitivity: "मध्यम संवेदनशीलता",
+    heightenedCaution: "विशेष सावधानी अपेक्षित",
+    airGoodDesc: "सभी आयु वर्गों के लिए स्वच्छ व अनुकूल वातावरण",
+    airModerateDesc: "संवेदनशील लोग बाहर अत्यधिक परिश्रम से बचें",
+    airPoorDesc: "सांस के मरीज बाहर व्यायाम सीमित रखें",
+    airQualityStatusGood: "स्वच्छ व उत्तम",
+    airQualityStatusModerate: "मध्यम गुणवत्ता",
+    airQualityStatusPoor: "सावधानी जरूरी",
+    airQualityStatusDesc: "वायुमंडलीय कणों का वास्तविक समय विश्लेषण",
+    pmTimelineTitle: "24-घंटे कण सांद्रता पूर्वानुमान",
+    pmTimelineSubtitle: "पीएम 2.5 (सूक्ष्म) और पीएम 10 (धूल) µg/m³ में",
+    activityPlannerTitle: "बाहरी स्वास्थ्य व गतिविधि समय",
+    activityPlannerSub: "वायु गुणवत्ता, तापमान, नमी, यूवी और बारिश के आधार पर सही समय",
+    predictionTitle: "स्मार्ट मौसम अनुमान",
+    predictionSubtitle: "मशीन लर्निंग मौसम मॉडल और वर्षा पूर्वानुमान",
+    settingsTitle: "सेटिंग्स व प्राथमिकताएं",
+    tempUnit: "तापमान इकाई",
+    windUnit: "हवा गति इकाई",
+    timeFormat: "समय प्रारूप",
+    airQualityAwareness: "वायु गुणवत्ता विशेष जागरूकता",
+    airQualityAwarenessDesc: "संवेदनशील फेफड़ों के लिए गतिविधियों में सख्त सीमाएं।",
+    close: "बंद करें",
+    save: "सहेजें",
     days: {
       Sun: "रवि",
       Mon: "सोम",

@@ -54,32 +54,11 @@ export function DemoBanner({ _reason }: { reason?: string; _reason?: string }) {
   return null;
 }
 
-/** Footer-style attribution line for a provider. */
-export function ProviderLine({
-  name,
-  detail,
-  url,
-}: {
+/** Attribution line for a provider - hidden for user-friendly clean presentation. */
+export function ProviderLine(_props: {
   name: string;
   detail?: string;
   url?: string;
 }) {
-  return (
-    <p className="text-[11px] leading-relaxed text-ink-400">
-      Source:{" "}
-      {url ? (
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-ink-600 underline decoration-line underline-offset-2 hover:text-pine-700"
-        >
-          {name}
-        </a>
-      ) : (
-        <span className="text-ink-600">{name}</span>
-      )}
-      {detail ? ` — ${detail}` : ""}
-    </p>
-  );
+  return null;
 }

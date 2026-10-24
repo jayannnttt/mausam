@@ -20,6 +20,8 @@ import {
   Gauge,
   Brain,
   ChevronRight,
+  Sprout,
+  Compass,
 } from "lucide-react";
 import { usePreferences } from "../state/preferencesContext";
 import { useWeatherData } from "../state/useWeatherData";
@@ -63,11 +65,11 @@ export function PersonalizedDashboard() {
   );
 
   const tabLabels: Record<DashboardTab, { label: string; icon: typeof Home }> = {
-    home: { label: "Basic Dashboard", icon: Home },
-    rain: { label: "Rain Report", icon: CloudRain },
-    wind: { label: "Wind Report", icon: Wind },
-    "air-quality": { label: "Air Quality", icon: Gauge },
-    prediction: { label: "Mausam Prediction", icon: Brain },
+    home: { label: t.tabHome, icon: Home },
+    rain: { label: t.tabRain, icon: CloudRain },
+    wind: { label: t.tabWind, icon: Wind },
+    "air-quality": { label: t.tabAirQuality, icon: Gauge },
+    prediction: { label: t.tabPrediction, icon: Brain },
   };
 
   return (
@@ -93,12 +95,12 @@ export function PersonalizedDashboard() {
                   Mausam Sense
                 </h1>
                 <span className="hidden md:inline-block text-[11px] font-editorial italic text-ink-500">
-                  Meteorological Instrument
+                  {t.meteorologicalInstrument}
                 </span>
               </div>
               {/* Active Tab indicator pill for quick glance */}
               <span className="text-[10px] font-medium text-pine flex items-center gap-1 sm:hidden">
-                <span>Current:</span>
+                <span>{t.current}</span>
                 <strong className="font-semibold">{tabLabels[activeTab].label}</strong>
               </span>
             </div>
@@ -200,7 +202,7 @@ export function PersonalizedDashboard() {
                 className={`h-3.5 w-3.5 text-ink-700 ${loading ? "animate-spin text-pine" : ""}`}
                 aria-hidden="true"
               />
-              <span className="hidden md:inline text-xs">Refresh</span>
+              <span className="hidden md:inline text-xs">{t.refresh}</span>
             </button>
 
             {/* Settings Button */}
@@ -216,7 +218,7 @@ export function PersonalizedDashboard() {
           </div>
         </div>
 
-        {/* Sub-bar: Persona Mode Toggle ("View Mode: Farmer / Commuter") */}
+        {/* Sub-bar: Persona Mode Toggle */}
         <div className="mt-2.5 flex items-center justify-between border-t border-line pt-2">
           <div
             className="flex w-full items-center rounded-lg border border-line bg-surface p-0.5 sm:w-auto"
@@ -224,9 +226,9 @@ export function PersonalizedDashboard() {
             aria-label="User persona mode"
           >
             <span className="hidden px-2.5 text-xs font-semibold uppercase tracking-wider text-ink-500 sm:inline">
-              View Mode:
+              {t.viewMode}
             </span>
-            <span className="sr-only">View Mode:</span>
+            <span className="sr-only">{t.viewMode}</span>
             <button
               type="button"
               role="radio"
@@ -238,7 +240,8 @@ export function PersonalizedDashboard() {
                   : "text-ink-600 hover:text-ink-950"
               }`}
             >
-              <span>🌾 {t.farmerMode}</span>
+              <Sprout className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{t.farmerMode}</span>
             </button>
 
             <button
@@ -252,7 +255,8 @@ export function PersonalizedDashboard() {
                   : "text-ink-600 hover:text-ink-950"
               }`}
             >
-              <span>🚗 {t.commuterMode}</span>
+              <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{t.commuterMode}</span>
             </button>
           </div>
 
@@ -302,9 +306,9 @@ export function PersonalizedDashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-lg font-bold text-ink-950">Rain Report</h2>
+                      <h2 className="text-lg font-bold text-ink-950">{t.tabRain}</h2>
                       <p className="text-xs text-ink-500">
-                        Rainfall totals, hourly precipitation probabilities, and wet-spell timing
+                        {t.rainReportSubtitle}
                       </p>
                     </div>
                     <button
@@ -312,7 +316,7 @@ export function PersonalizedDashboard() {
                       onClick={() => setActiveTab("home")}
                       className="text-xs text-pine font-semibold hover:underline"
                     >
-                      ← Back to Basic Dashboard
+                      ← {t.backToHome}
                     </button>
                   </div>
                   <RainReport dataset={dataset} prefs={prefs} />
@@ -324,9 +328,9 @@ export function PersonalizedDashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-lg font-bold text-ink-950">Wind Report</h2>
+                      <h2 className="text-lg font-bold text-ink-950">{t.tabWind}</h2>
                       <p className="text-xs text-ink-500">
-                        Surface wind velocities, peak gusts, Beaufort scale, and 24h circulation
+                        {t.windReportSubtitle}
                       </p>
                     </div>
                     <button
@@ -334,7 +338,7 @@ export function PersonalizedDashboard() {
                       onClick={() => setActiveTab("home")}
                       className="text-xs text-pine font-semibold hover:underline"
                     >
-                      ← Back to Basic Dashboard
+                      ← {t.backToHome}
                     </button>
                   </div>
                   <WindReport dataset={dataset} prefs={prefs} />
@@ -346,9 +350,9 @@ export function PersonalizedDashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-lg font-bold text-ink-950">Air Quality & Outdoor Health</h2>
+                      <h2 className="text-lg font-bold text-ink-950">{t.tabAirQuality}</h2>
                       <p className="text-xs text-ink-500">
-                        Copernicus CAMS atmospheric particulates and transparent outdoor activity recommendations
+                        {t.airQualitySubtitle}
                       </p>
                     </div>
                     <button
@@ -356,21 +360,21 @@ export function PersonalizedDashboard() {
                       onClick={() => setActiveTab("home")}
                       className="text-xs text-pine font-semibold hover:underline"
                     >
-                      ← Back to Basic Dashboard
+                      ← {t.backToHome}
                     </button>
                   </div>
                   <AirQualityReport dataset={dataset} prefs={prefs} />
                 </div>
               )}
 
-              {/* 5. Mausam Prediction (Trained ML Model Section) */}
+              {/* 5. Smart Prediction */}
               {activeTab === "prediction" && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-lg font-bold text-ink-950">Mausam Prediction Platform</h2>
+                      <h2 className="text-lg font-bold text-ink-950">{t.tabPrediction}</h2>
                       <p className="text-xs text-ink-500">
-                        SIH 2026 trained machine learning model, conformal uncertainty intervals, and NWP verification
+                        {t.predictionSubtitle}
                       </p>
                     </div>
                     <button
@@ -378,7 +382,7 @@ export function PersonalizedDashboard() {
                       onClick={() => setActiveTab("home")}
                       className="text-xs text-pine font-semibold hover:underline"
                     >
-                      ← Back to Basic Dashboard
+                      ← {t.backToHome}
                     </button>
                   </div>
                   <RainIntelligence
@@ -407,11 +411,10 @@ export function PersonalizedDashboard() {
       <ProfilePreferences open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <LanguageSelectorModal open={languageModalOpen} onClose={() => setLanguageModalOpen(false)} />
 
-      {/* Minimal Footer */}
+      {/* Minimal User-friendly Footer */}
       <footer className="mt-12 border-t border-line pt-6 text-[11px] leading-relaxed text-ink-500">
         <p>
-          <strong className="text-ink-800 font-semibold">Mausam Sense</strong> — Precision meteorological instrument and personalization engine.
-          Data streams by Open-Meteo weather and CAMS atmospheric models. Official bulletins sourced via IMD public APIs where available.
+          <strong className="text-ink-800 font-semibold">{t.appTitle}</strong> — {t.appFooter}
         </p>
       </footer>
     </div>

@@ -77,13 +77,13 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
     const next12 = dataset.hourly.slice(0, 12);
     const rain = next12.find((h) => (h.precipitationProbabilityPct ?? 0) >= 45);
     if (rain) {
-      return `Precipitation likely near ${rain.time.slice(11, 16)} (${Math.round(rain.precipitationProbabilityPct ?? 0)}% risk).`;
+      return `${t.precipitationLikely} (${Math.round(rain.precipitationProbabilityPct ?? 0)}%).`;
     }
     const temp = c?.temperatureC ?? 26;
-    if (temp >= 35) return "Intense midday heat. Stay hydrated during peak sunlight.";
-    if (temp <= 14) return "Cool airmass settled over the region. Light layers advised.";
-    return "Calm, stable meteorological conditions throughout the forecast window.";
-  }, [c?.temperatureC, dataset.hourly]);
+    if (temp >= 35) return t.intenseHeat;
+    if (temp <= 14) return t.coolWeather;
+    return t.calmWeather;
+  }, [c?.temperatureC, dataset.hourly, t]);
 
   return (
     <div className="space-y-6">
@@ -160,7 +160,7 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
                   className="h-12 w-12 text-pine"
                 />
                 <span className="text-xs uppercase tracking-wider font-semibold text-ink-500">
-                  Today's Outlook
+                  {t.todaysOutlook}
                 </span>
               </div>
               <p className="font-editorial italic text-sm leading-relaxed text-ink-700">
@@ -176,7 +176,7 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
                 <span>{t.next24Hours}</span>
                 <span className="text-ink-400 font-normal">({tempUnitLabel(prefs.temperatureUnit)})</span>
               </span>
-              <span className="text-[11px] text-ink-400">Horizontal scroll</span>
+              <span className="text-[11px] text-ink-400">{t.horizontalScroll}</span>
             </div>
 
             <div className="relative">
@@ -213,7 +213,7 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
                           prob >= 30 ? "text-weather-rain font-semibold" : "text-ink-400"
                         }`}
                       >
-                        {prob > 0 ? `${Math.round(prob)}% rain` : "No rain"}
+                        {prob > 0 ? `${Math.round(prob)}% ${t.rain}` : t.noRain}
                       </span>
                     </li>
                   );
@@ -227,8 +227,8 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
       {/* Quick Navigation Cards to Specialized Reports */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <span className="label-caps">Deep Intelligence Reports</span>
-          <span className="text-[11px] text-ink-400">Tap to open dashboard</span>
+          <span className="label-caps">{t.deepReports}</span>
+          <span className="text-[11px] text-ink-400">{t.tapToOpen}</span>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -246,10 +246,10 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
             </div>
             <div className="mt-3">
               <h3 className="text-sm font-semibold text-ink-900 group-hover:text-weather-rain">
-                Rain Report
+                {t.tabRain}
               </h3>
               <p className="mt-0.5 text-xs text-ink-500">
-                Totals (24/48/72h), wet spells & probability charts
+                {t.rainCardDesc}
               </p>
             </div>
           </button>
@@ -268,10 +268,10 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
             </div>
             <div className="mt-3">
               <h3 className="text-sm font-semibold text-ink-900 group-hover:text-pine">
-                Wind Report
+                {t.tabWind}
               </h3>
               <p className="mt-0.5 text-xs text-ink-500">
-                Surface speed, gusts & 24h circulation trend
+                {t.windCardDesc}
               </p>
             </div>
           </button>
@@ -290,10 +290,10 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
             </div>
             <div className="mt-3">
               <h3 className="text-sm font-semibold text-ink-900 group-hover:text-weather-sun">
-                Air Quality
+                {t.tabAirQuality}
               </h3>
               <p className="mt-0.5 text-xs text-ink-500">
-                PM2.5, PM10 timeline & outdoor activity planner
+                {t.airQualityCardDesc}
               </p>
             </div>
           </button>
@@ -312,10 +312,10 @@ export function HomeDashboard({ dataset, prefs, onNavigate }: HomeDashboardProps
             </div>
             <div className="mt-3">
               <h3 className="text-sm font-semibold text-pine">
-                Mausam Prediction
+                {t.tabPrediction}
               </h3>
               <p className="mt-0.5 text-xs text-ink-600">
-                Trained SIH 2026 ML model, conformal intervals & NWP verification
+                {t.predictionCardDesc}
               </p>
             </div>
           </button>
