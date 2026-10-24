@@ -20,8 +20,6 @@ import {
   Gauge,
   Brain,
   ChevronRight,
-  Sprout,
-  Compass,
 } from "lucide-react";
 import { usePreferences } from "../state/preferencesContext";
 import { useWeatherData } from "../state/useWeatherData";
@@ -41,8 +39,6 @@ export function PersonalizedDashboard() {
   const {
     prefs,
     language,
-    persona,
-    setPersona,
     t,
     selectedLocation,
     setSelectedLocation,
@@ -218,59 +214,17 @@ export function PersonalizedDashboard() {
           </div>
         </div>
 
-        {/* Sub-bar: Persona Mode Toggle */}
-        <div className="mt-2.5 flex items-center justify-between border-t border-line pt-2">
-          <div
-            className="flex w-full items-center rounded-lg border border-line bg-surface p-0.5 sm:w-auto"
-            role="radiogroup"
-            aria-label="User persona mode"
+        {/* Quick tab switcher pill on small devices (no persona mode) */}
+        <div className="mt-2 flex lg:hidden items-center justify-between border-t border-line pt-2">
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs text-pine font-medium hover:underline"
           >
-            <span className="hidden px-2.5 text-xs font-semibold uppercase tracking-wider text-ink-500 sm:inline">
-              {t.viewMode}
-            </span>
-            <span className="sr-only">{t.viewMode}</span>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={persona === "farmer"}
-              onClick={() => setPersona("farmer")}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded px-3 py-1 text-xs font-medium transition-all ${
-                persona === "farmer"
-                  ? "bg-pine text-surface font-semibold shadow-xs"
-                  : "text-ink-600 hover:text-ink-950"
-              }`}
-            >
-              <Sprout className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{t.farmerMode}</span>
-            </button>
-
-            <button
-              type="button"
-              role="radio"
-              aria-checked={persona === "commuter"}
-              onClick={() => setPersona("commuter")}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded px-3 py-1 text-xs font-medium transition-all ${
-                persona === "commuter"
-                  ? "bg-weather-rain text-surface font-semibold shadow-xs"
-                  : "text-ink-600 hover:text-ink-950"
-              }`}
-            >
-              <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{t.commuterMode}</span>
-            </button>
-          </div>
-
-          {/* Quick tab switcher pill on small devices */}
-          <div className="lg:hidden flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => setMenuOpen(true)}
-              className="inline-flex items-center gap-1 text-xs text-pine font-medium hover:underline"
-            >
-              <span>{tabLabels[activeTab].label}</span>
-              <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
+            <span className="text-ink-500">{t.current}</span>
+            <strong className="font-semibold text-ink-950">{tabLabels[activeTab].label}</strong>
+            <ChevronRight className="h-3.5 w-3.5 text-pine" />
+          </button>
         </div>
       </header>
 
@@ -278,7 +232,7 @@ export function PersonalizedDashboard() {
       <main className="mt-5 space-y-6">
         {error && (
           <ErrorState
-            title="Unable to load meteorological data"
+            title={t.unableToLoadData}
             description={error}
             onRetry={reload}
           />

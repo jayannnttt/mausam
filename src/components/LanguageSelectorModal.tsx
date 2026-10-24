@@ -47,7 +47,7 @@ export function LanguageGrid({
             onClick={() => setQuery("")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-400 hover:text-ink-700"
           >
-            Clear
+            {t.clear}
           </button>
         )}
       </div>
@@ -91,7 +91,7 @@ export function LanguageGrid({
       </div>
       {filtered.length === 0 && (
         <div className="py-8 text-center text-sm text-ink-400">
-          No languages matching "{query}".
+          {t.noLanguagesFound} ("{query}").
         </div>
       )}
     </div>
@@ -134,7 +134,7 @@ export function LanguageSelectorModal({
             type="button"
             onClick={onClose}
             className="rounded-lg p-1.5 text-ink-400 hover:bg-line-subtle hover:text-ink-900 transition-colors"
-            aria-label="Close"
+            aria-label={t.close}
           >
             <X className="h-4 w-4" />
           </button>
@@ -154,7 +154,7 @@ export function LanguageSelectorModal({
             onClick={onClose}
             className="btn btn-primary px-5 text-xs font-semibold"
           >
-            {t.done ?? "Done"}
+            {t.done}
           </button>
         </div>
       </div>

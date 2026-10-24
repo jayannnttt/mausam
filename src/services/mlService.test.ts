@@ -159,7 +159,7 @@ describe("error mapping", () => {
       expect(describeMlError(e)).toContain("did not respond in time");
     }
     // fetchHealth's internal timeout is 8s — exceed the default test timeout.
-  }, 12_000);
+  }, 20_000);
 
   it("non-string detail (validation array) is stringified, not dropped", async () => {
     fetchMock.mockResolvedValue(

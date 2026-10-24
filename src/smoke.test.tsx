@@ -57,7 +57,6 @@ describe("app smoke render", () => {
     setPrefs({ onboarded: true });
     const html = render();
     expect(html).toContain("Mausam Sense");
-    expect(html).toContain("View Mode:");
     expect(html).toContain("Refresh");
   });
 

@@ -32,27 +32,27 @@ import { Card, CardHeader, EmptyState } from "./ui/primitives";
 import { formatHour, formatWind } from "../utils/format";
 import { ProviderLine } from "./DataSourceBadge";
 
+import { getTranslation } from "../i18n/translations";
+
 /** Beaufort scale mapping based on wind speed in km/h */
-function getBeaufortScale(kmh: number): {
+function getBeaufortScale(kmh: number, t: ReturnType<typeof getTranslation>): {
   scale: number;
   label: string;
   description: string;
   color: string;
 } {
-  if (kmh < 2) return { scale: 0, label: "Calm", description: "Smoke rises vertically. Sea like a mirror.", color: "text-pine" };
-  if (kmh < 6) return { scale: 1, label: "Light Air", description: "Direction shown by smoke drift, but not by wind vanes.", color: "text-pine" };
-  if (kmh < 12) return { scale: 2, label: "Light Breeze", description: "Wind felt on face; leaves rustle; ordinary vanes moved by wind.", color: "text-pine" };
-  if (kmh < 20) return { scale: 3, label: "Gentle Breeze", description: "Leaves and small twigs in constant motion; light flags extended.", color: "text-pine-600" };
-  if (kmh < 29) return { scale: 4, label: "Moderate Breeze", description: "Raises dust and loose paper; small branches move.", color: "text-weather-rain" };
-  if (kmh < 39) return { scale: 5, label: "Fresh Breeze", description: "Small trees in leaf begin to sway; crested wavelets form on inland waters.", color: "text-weather-rain" };
-  if (kmh < 50) return { scale: 6, label: "Strong Breeze", description: "Large branches in motion; whistling heard in telegraph wires; umbrellas used with difficulty.", color: "text-weather-sun" };
-  if (kmh < 62) return { scale: 7, label: "Near Gale", description: "Whole trees in motion; inconvenience felt when walking against the wind.", color: "text-weather-sun" };
-  if (kmh < 75) return { scale: 8, label: "Gale", description: "Breaks twigs off trees; generally impedes progress.", color: "text-weather-alert" };
-  if (kmh < 89) return { scale: 9, label: "Strong Gale", description: "Slight structural damage occurs (chimney-pots and slates removed).", color: "text-weather-alert" };
-  return { scale: 10, label: "Storm / Violent Storm", description: "Seldom experienced inland; trees uprooted; considerable structural damage.", color: "text-weather-alert" };
+  if (kmh < 2) return { scale: 0, label: t.windCalm, description: "Smoke rises vertically. Sea like a mirror.", color: "text-pine" };
+  if (kmh < 6) return { scale: 1, label: t.windLightAir, description: "Direction shown by smoke drift, but not by wind vanes.", color: "text-pine" };
+  if (kmh < 12) return { scale: 2, label: t.windLightBreeze, description: "Wind felt on face; leaves rustle; ordinary vanes moved by wind.", color: "text-pine" };
+  if (kmh < 20) return { scale: 3, label: t.windGentleBreeze, description: "Leaves and small twigs in constant motion; light flags extended.", color: "text-pine-600" };
+  if (kmh < 29) return { scale: 4, label: t.windModerateBreeze, description: "Raises dust and loose paper; small branches move.", color: "text-weather-rain" };
+  if (kmh < 39) return { scale: 5, label: t.windFreshBreeze, description: "Small trees in leaf begin to sway; crested wavelets form on inland waters.", color: "text-weather-rain" };
+  if (kmh < 50) return { scale: 6, label: t.windStrongBreeze, description: "Large branches in motion; whistling heard in telegraph wires.", color: "text-weather-sun" };
+  if (kmh < 62) return { scale: 7, label: t.windNearGale, description: "Whole trees in motion; inconvenience felt when walking against the wind.", color: "text-weather-sun" };
+  if (kmh < 75) return { scale: 8, label: t.windGale, description: "Breaks twigs off trees; generally impedes progress.", color: "text-weather-alert" };
+  if (kmh < 89) return { scale: 9, label: t.windStrongGale, description: "Slight structural damage occurs.", color: "text-weather-alert" };
+  return { scale: 10, label: t.windStorm, description: "Seldom experienced inland; trees uprooted.", color: "text-weather-alert" };
 }
-
-import { getTranslation } from "../i18n/translations";
 
 export function WindReport({
   dataset,
@@ -63,7 +63,7 @@ export function WindReport({
 }) {
   const t = getTranslation(prefs.language);
   const currentSpeed = dataset.current?.windSpeedKmh ?? 0;
-  const beaufort = getBeaufortScale(currentSpeed);
+  const beaufort = getBeaufortScale(currentSpeed, t);
 
   const hourlyWind = useMemo(() => {
     const nowIso = dataset.current?.time ?? dataset.hourly[0]?.time;
@@ -100,8 +100,8 @@ export function WindReport({
         <CardHeader title={t.windReportTitle} icon={<Wind className="h-4 w-4 text-pine" />} />
         <div className="p-5">
           <EmptyState
-            title="Wind telemetry unavailable"
-            description="Wind and atmospheric circulation data could not be retrieved for this location."
+            title={t.windUnavailable}
+            description={t.windUnavailableDesc}
           />
         </div>
       </Card>
@@ -239,10 +239,10 @@ export function WindReport({
                       <div className="rounded-lg border border-line bg-surface p-2.5 text-xs shadow-md">
                         <p className="font-semibold text-ink-900">{label}</p>
                         <p className="mt-1 text-pine font-medium">
-                          Sustained: {payload[0]?.value} {unitLabel}
+                          {t.sustainedSpeed}: {payload[0]?.value} {unitLabel}
                         </p>
                         <p className="text-weather-sun font-medium">
-                          Gusts (est.): {payload[1]?.value} {unitLabel}
+                          {t.estimatedGusts}: {payload[1]?.value} {unitLabel}
                         </p>
                       </div>
                     );
@@ -251,7 +251,7 @@ export function WindReport({
                 <Area
                   type="monotone"
                   dataKey="speed"
-                  name="Sustained Wind"
+                  name={t.sustainedSpeed}
                   stroke="#35665F"
                   strokeWidth={2.5}
                   fillOpacity={1}
@@ -260,7 +260,7 @@ export function WindReport({
                 <Line
                   type="monotone"
                   dataKey="gust"
-                  name="Peak Gusts"
+                  name={t.estimatedGusts}
                   stroke="#D9A441"
                   strokeWidth={1.5}
                   strokeDasharray="4 4"

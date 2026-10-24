@@ -101,17 +101,18 @@ type BackendState = "checking" | "ready" | "model_missing" | "unreachable";
 // --------------------------------------------------------------------------- #
 
 export function PredictionTable({ days }: { days: DayPrediction[] }) {
+  const { t } = usePreferences();
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[560px] text-left text-xs">
         <thead>
           <tr className="border-b border-line text-[10px] uppercase tracking-wider text-ink-400">
-            <th className="py-2 pr-2 font-semibold">Day</th>
-            <th className="py-2 pr-2 font-semibold">Lead</th>
-            <th className="py-2 pr-2 font-semibold">Rain probability</th>
-            <th className="py-2 pr-2 font-semibold">ML rainfall</th>
-            <th className="py-2 pr-2 font-semibold">NWP forecast</th>
-            <th className="py-2 pr-2 font-semibold">Climatology</th>
+            <th className="py-2 pr-2 font-semibold">{t.colDay}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colLead}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colRainProbability}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colMlRainfall}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colNwpForecast}</th>
+            <th className="py-2 pr-2 font-semibold">{t.colClimatology}</th>
           </tr>
         </thead>
         <tbody>
@@ -121,7 +122,7 @@ export function PredictionTable({ days }: { days: DayPrediction[] }) {
                 {d.weekday ? `${d.weekday} ` : ""}
                 {d.date.slice(5)}
               </td>
-              <td className="py-2 pr-2 text-ink-500 tabular-nums">{d.lead_days}d</td>
+              <td className="py-2 pr-2 text-ink-500 tabular-nums">{d.lead_days}{t.dayLeadUnit}</td>
               <td className="py-2 pr-2">
                 {d.model_available && d.probability_rain !== undefined ? (
                   <span className="flex items-center gap-2">
@@ -155,7 +156,7 @@ export function PredictionTable({ days }: { days: DayPrediction[] }) {
                   </>
                 ) : (
                   <span className="text-ink-400" title={d.reason}>
-                    no model
+                    {t.noModel}
                   </span>
                 )}
               </td>
@@ -862,7 +863,7 @@ export function RainIntelligence({
                 >
                   {[1, 2, 3, 4, 5, 6, 7].map((d) => (
                     <option key={d} value={d}>
-                      {d}-day lead
+                      {d} {t.dayLeadUnit}
                     </option>
                   ))}
                 </select>
@@ -876,8 +877,8 @@ export function RainIntelligence({
                   onChange={(e) => setScope(e.target.value as "here" | "cities")}
                   className="rounded-lg border border-line bg-surface px-2.5 py-1 text-xs text-ink-900 focus:border-pine-600 focus:outline-none focus:ring-1 focus:ring-pine-600"
                 >
-                  <option value="here">This location (GPS/coords)</option>
-                  <option value="cities">All training cities (pooled)</option>
+                  <option value="here">{t.thisLocationScope}</option>
+                  <option value="cities">{t.allCitiesScope}</option>
                 </select>
 
                 <label className="sr-only" htmlFor="vi-range">
@@ -889,10 +890,10 @@ export function RainIntelligence({
                   onChange={(e) => setPreset(e.target.value as RangePreset)}
                   className="rounded-lg border border-line bg-surface px-2.5 py-1 text-xs text-ink-900 focus:border-pine-600 focus:outline-none focus:ring-1 focus:ring-pine-600"
                 >
-                  <option value="30">Last 30 days</option>
-                  <option value="90">Last 90 days</option>
-                  <option value="180">Last 180 days</option>
-                  <option value="custom">Custom…</option>
+                  <option value="30">{t.last30Days}</option>
+                  <option value="90">{t.last90Days}</option>
+                  <option value="180">{t.last180Days}</option>
+                  <option value="custom">{t.customRange}</option>
                 </select>
 
                 {preset === "custom" && (
@@ -934,7 +935,7 @@ export function RainIntelligence({
                 description="Run the verification to compare the ML model, the NWP forecast and the climatology baseline against observed rainfall for this window."
                 action={
                   <button type="button" className="btn btn-primary" onClick={runVerification}>
-                    Run verification
+                    {t.runVerification}
                   </button>
                 }
               />

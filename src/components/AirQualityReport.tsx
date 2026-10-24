@@ -66,8 +66,8 @@ export function AirQualityReport({
         <CardHeader title={t.airQualityTitle} icon={<Gauge className="h-4 w-4 text-pine" />} />
         <div className="p-5">
           <EmptyState
-            title="Air quality data unavailable"
-            description="Atmospheric aerosol models could not be loaded for this location."
+            title={t.airQualityUnavailable}
+            description={t.airQualityUnavailableDesc}
           />
         </div>
       </Card>
@@ -99,7 +99,7 @@ export function AirQualityReport({
               {band ? (
                 <span className="font-semibold text-pine">{band.label}</span>
               ) : (
-                "Fine particulate matter"
+                t.fineParticulateMatter
               )}
             </p>
           </div>
@@ -122,7 +122,7 @@ export function AirQualityReport({
               </span>
               <span className="text-sm font-semibold text-ink-600">µg/m³</span>
             </div>
-            <p className="mt-1 text-xs text-ink-500">Coarse respirable particulates</p>
+            <p className="mt-1 text-xs text-ink-500">{t.coarseParticulates}</p>
           </div>
         </Card>
 

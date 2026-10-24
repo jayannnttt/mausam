@@ -54,14 +54,14 @@ export function WeatherAlertCard({
                     </span>
                     {w.isDemo && (
                       <span className="rounded border border-weather-sunBorder bg-weather-sunSurface px-1.5 py-0.5 text-[10px] font-semibold text-weather-sun">
-                        SIMULATION BULLETIN
+                        {t.simulationBulletin}
                       </span>
                     )}
                   </div>
                   <h3 className="text-sm font-semibold text-ink-950">{w.headline}</h3>
-                  <p className="text-xs text-ink-700">Area: {w.affectedArea}</p>
+                  <p className="text-xs text-ink-700">{t.affectedArea}: {w.affectedArea}</p>
                   <p className="text-xs text-ink-500 tabular-nums">
-                    Validity: {w.effectiveFrom} → {w.effectiveTo}
+                    {t.validity}: {w.effectiveFrom} → {w.effectiveTo}
                   </p>
                   {w.detail && (
                     <p className="mt-2 rounded-md border border-line bg-surface p-2.5 text-xs text-ink-800 leading-relaxed">
@@ -75,7 +75,7 @@ export function WeatherAlertCard({
                       rel="noreferrer"
                       className="mt-2 inline-flex items-center gap-1 text-xs text-pine hover:underline font-medium"
                     >
-                      Official Source <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      {t.officialSource} <ExternalLink className="h-3 w-3" aria-hidden="true" />
                     </a>
                   )}
                 </div>
@@ -104,8 +104,8 @@ export function WeatherAlertCard({
       <div className="flex items-start gap-3 rounded-xl border border-weather-rainBorder bg-weather-rainSurface p-3.5 text-xs text-ink-800 shadow-xs">
         <CloudRain className="h-4 w-4 shrink-0 text-weather-rain mt-0.5" aria-hidden="true" />
         <div>
-          <span className="font-semibold text-ink-950">Impending Precipitation Bulletin:</span>{" "}
-          Heavy rain likely within the next 3 hours ({Math.round(severeRain.precipitationProbabilityPct ?? 70)}% probability, up to {severeRain.precipitationMm ?? 4} mm).
+          <span className="font-semibold text-ink-950">{t.impendingRainBulletin}:</span>{" "}
+          {t.precipitationLikely} ({Math.round(severeRain.precipitationProbabilityPct ?? 70)}%, ~{severeRain.precipitationMm ?? 4} mm).
         </div>
       </div>
     );
@@ -116,8 +116,8 @@ export function WeatherAlertCard({
       <div className="flex items-start gap-3 rounded-xl border border-weather-sunBorder bg-weather-sunSurface p-3.5 text-xs text-ink-800 shadow-xs">
         <Sun className="h-4 w-4 shrink-0 text-weather-sun mt-0.5" aria-hidden="true" />
         <div>
-          <span className="font-semibold text-ink-950">Solar Radiation Notice:</span>{" "}
-          UV Index is currently elevated at {Math.round(uvNow * 10) / 10} (Very High). Seek shade during peak midday hours.
+          <span className="font-semibold text-ink-950">{t.solarRadiationNotice}:</span>{" "}
+          {t.uvNow} {Math.round(uvNow * 10) / 10}.
         </div>
       </div>
     );
@@ -128,8 +128,8 @@ export function WeatherAlertCard({
       <div className="flex items-start gap-3 rounded-xl border border-weather-alertBorder bg-weather-alertSurface p-3.5 text-xs text-ink-800 shadow-xs">
         <Gauge className="h-4 w-4 shrink-0 text-weather-alert mt-0.5" aria-hidden="true" />
         <div>
-          <span className="font-semibold text-ink-950">Air Quality Advisory:</span>{" "}
-          Ambient PM2.5 level is elevated at {Math.round(nowAq)} µg/m³. Individuals with respiratory sensitivity should moderate prolonged exertion.
+          <span className="font-semibold text-ink-950">{t.airQualityAdvisory}:</span>{" "}
+          {t.pm25Concentration} {Math.round(nowAq)} µg/m³. {t.heightenedCaution}.
         </div>
       </div>
     );

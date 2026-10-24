@@ -101,7 +101,7 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               onClose();
             }}
           >
-            <RotateCcw className="h-4 w-4" aria-hidden="true" /> Replay onboarding
+            <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t.replayOnboarding}
           </button>
           <button
             type="button"
@@ -111,13 +111,12 @@ export function ProfilePreferences({ open, onClose }: { open: boolean; onClose: 
               location.reload();
             }}
           >
-            <Trash2 className="h-4 w-4" aria-hidden="true" /> Clear saved data
+            <Trash2 className="h-4 w-4" aria-hidden="true" /> {t.clearSavedData}
           </button>
         </section>
 
         <p className="text-[11px] text-ink-400">
-          Mausam Sense is an independent hackathon prototype. It is not affiliated with or endorsed
-          by the India Meteorological Department or any government agency.
+          {t.prototypeDisclaimer}
         </p>
       </div>
     </Modal>

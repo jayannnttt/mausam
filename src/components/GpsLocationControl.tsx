@@ -24,6 +24,7 @@ import {
 } from "../services/gpsLocation";
 import { deviceLocation, reverseGeocode } from "../services/reverseGeocoding";
 import { describeError } from "../services/httpClient";
+import { usePreferences } from "../state/preferencesContext";
 
 export interface GpsSelection {
   location: GeoLocation;
@@ -49,6 +50,7 @@ export function GpsLocationControl({
   onPick: (selection: GpsSelection) => void;
   compact?: boolean;
 }) {
+  const { t } = usePreferences();
   const [busy, setBusy] = useState<false | "locating" | "resolving">(false);
   const [error, setError] = useState<string | null>(null);
   const [fix, setFix] = useState<GpsFix | null>(null);
@@ -130,7 +132,7 @@ export function GpsLocationControl({
         ) : (
           <>
             <Crosshair className="h-3.5 w-3.5" aria-hidden="true" />
-            {fix ? "Refresh my current location" : "Use my current location"}
+            {fix ? (t.refreshMyCurrentLocation || "Refresh my current location") : (t.useMyCurrentLocation || "Use my current location")}
           </>
         )}
       </button>

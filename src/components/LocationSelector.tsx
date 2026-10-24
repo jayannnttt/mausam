@@ -10,6 +10,7 @@ import { searchLocations, manualLocation } from "../services/geocodingService";
 import { DEMO_LOCATIONS } from "../services/demoDataService";
 import { describeError } from "../services/httpClient";
 import { GpsLocationControl } from "./GpsLocationControl";
+import { usePreferences } from "../state/preferencesContext";
 
 export function LocationSearchResults({
   query,
@@ -18,6 +19,7 @@ export function LocationSearchResults({
   query: string;
   onPick: (loc: GeoLocation) => void;
 }) {
+  const { t } = usePreferences();
   const [results, setResults] = useState<GeoLocation[]>([]);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,17 +59,16 @@ export function LocationSearchResults({
     <div className="mt-2">
       {searching && (
         <p className="flex items-center gap-2 py-2 text-sm text-slate-400">
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Searching…
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> {t.searching || "Searching…"}
         </p>
       )}
       {error && (
         <p className="py-2 text-sm text-amber-300">
-          Search unavailable: {error}. You can still enter coordinates manually below or pick a
-          city.
+          {t.searchUnavailable || "Search unavailable"}: {error}
         </p>
       )}
       {!searching && !error && query.trim().length >= 2 && results.length === 0 && (
-        <p className="py-2 text-sm text-slate-400">No places found. Try a different spelling.</p>
+        <p className="py-2 text-sm text-slate-400">{t.noPlacesFound || "No places found. Try a different spelling."}</p>
       )}
       <ul className="max-h-64 divide-y divide-line-subtle overflow-y-auto rounded-lg border border-line bg-surface">
         {results.map((loc) => (
@@ -97,6 +98,7 @@ export function LocationSearchResults({
 }
 
 export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => void }) {
+  const { t } = usePreferences();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [lat, setLat] = useState("");
@@ -107,7 +109,7 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
     const la = Number(lat);
     const lo = Number(lon);
     if (!Number.isFinite(la) || !Number.isFinite(lo) || Math.abs(la) > 90 || Math.abs(lo) > 180) {
-      setErr("Enter a latitude between −90 and 90 and a longitude between −180 and 180.");
+      setErr(t.searchUnavailable || "Invalid coordinates");
       return;
     }
     setErr(null);
@@ -117,7 +119,7 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
   if (!open) {
     return (
       <button type="button" className="btn mt-2 w-full text-xs" onClick={() => setOpen(true)}>
-        <Plus className="h-3.5 w-3.5" aria-hidden="true" /> Enter coordinates manually
+        <Plus className="h-3.5 w-3.5" aria-hidden="true" /> {t.enterCoordinates || "Enter coordinates manually"}
       </button>
     );
   }
@@ -125,7 +127,7 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
     <div className="mt-2 rounded-lg border border-line bg-surface p-3">
       <div className="grid grid-cols-2 gap-2">
         <label className="col-span-2 block">
-          <span className="label-caps">Name (optional)</span>
+          <span className="label-caps">{t.locationName || "Name (optional)"}</span>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -134,7 +136,7 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
           />
         </label>
         <label className="block">
-          <span className="label-caps">Latitude</span>
+          <span className="label-caps">{t.latitude || "Latitude"}</span>
           <input
             value={lat}
             onChange={(e) => setLat(e.target.value)}
@@ -144,7 +146,7 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
           />
         </label>
         <label className="block">
-          <span className="label-caps">Longitude</span>
+          <span className="label-caps">{t.longitude || "Longitude"}</span>
           <input
             value={lon}
             onChange={(e) => setLon(e.target.value)}
@@ -157,10 +159,10 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
       {err && <p className="mt-2 text-xs text-weather-alert">{err}</p>}
       <div className="mt-3 flex gap-2">
         <button type="button" className="btn btn-primary flex-1 text-xs" onClick={submit}>
-          Use coordinates
+          {t.apply || "Use coordinates"}
         </button>
         <button type="button" className="btn text-xs" onClick={() => setOpen(false)}>
-          Cancel
+          {t.cancel || "Cancel"}
         </button>
       </div>
     </div>
@@ -168,9 +170,10 @@ export function ManualLocationForm({ onPick }: { onPick: (loc: GeoLocation) => v
 }
 
 export function DemoCityButtons({ onPick }: { onPick: (loc: GeoLocation) => void }) {
+  const { t } = usePreferences();
   return (
     <div className="mt-3">
-      <p className="label-caps">Popular observation cities</p>
+      <p className="label-caps">{t.popularCities || "Popular observation cities"}</p>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {DEMO_LOCATIONS.map((loc) => (
           <button
@@ -201,6 +204,7 @@ export function LocationSelector({
   onSelect: (loc: GeoLocation) => void;
   onSaveNew: (loc: GeoLocation) => void;
 }) {
+  const { t } = usePreferences();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -241,7 +245,7 @@ export function LocationSelector({
             }}
           />
           <label className="mt-3 block">
-            <span className="label-caps">Search city or district</span>
+            <span className="label-caps">{t.searchCityOrDistrict || "Search city or district"}</span>
             <div className="relative mt-1">
               <Search
                 className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-400"
@@ -251,7 +255,7 @@ export function LocationSelector({
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Chennai, Nagpur, Pune…"
+                placeholder={t.searchCityPlaceholder || "Chennai, Nagpur, Pune…"}
                 className="w-full rounded-md border border-line bg-paper py-1.5 pl-8 pr-2.5 text-xs sm:text-sm text-ink-900 placeholder:text-ink-400 focus:border-pine focus:outline-none"
               />
             </div>
@@ -266,7 +270,7 @@ export function LocationSelector({
           />
           {locations.length > 0 && (
             <div className="mt-3">
-              <p className="label-caps">Recent locations</p>
+              <p className="label-caps">{t.recentLocations || "Recent locations"}</p>
               <ul className="mt-1 space-y-0.5">
                 {locations.slice(0, 5).map((loc) => (
                   <li key={loc.id}>
