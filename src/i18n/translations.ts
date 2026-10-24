@@ -154,6 +154,89 @@ export interface TranslationDict {
   activityPlannerTitle: string;
   activityPlannerSub: string;
 
+  // Activity Planner Keys
+  actRunning: string;
+  actJogging: string;
+  actWalking: string;
+  actCycling: string;
+  actGeneral: string;
+  dataCoverage: string;
+  outdoorConditionsNow: string;
+  bestScoreToday: string;
+  heightenedAwarenessActive: string;
+  recommendedWindow: string;
+  mergedGoodHours: string;
+  hoursWindow: string;
+  hours: string;
+  whyThisTime: string;
+  factorAirQuality: string;
+  factorTemperature: string;
+  factorRain: string;
+  factorUv: string;
+  factorWind: string;
+  factorHumidity: string;
+  factorWarning: string;
+  scoreLabel: string;
+  weightLabel: string;
+  otherAvailableWindows: string;
+  bestWindow: string;
+  secondOption: string;
+  thirdOption: string;
+  showMoreOptions: string;
+  showFewerOptions: string;
+  rankingMethodology: string;
+  scoreByHourTitle: string;
+  tempHumidityTitle: string;
+  activeWarning: string;
+  noActiveWarning: string;
+  aqGood: string;
+  aqFair: string;
+  aqModerate: string;
+  aqPoor: string;
+  aqVeryPoor: string;
+  aqAdviceGood: string;
+  aqAdviceFair: string;
+  aqAdviceModerate: string;
+  aqAdvicePoor: string;
+  aqAdviceVeryPoor: string;
+
+  // Extra Rain & Wind Keys
+  rainTotal72h: string;
+  peakProbability: string;
+  rainGuidance: string;
+  rainGuidanceSub: string;
+  noRainThreats: string;
+  wetSpellsTitle: string;
+  wetSpellsSub: string;
+  durationHours: string;
+  noWetSpells: string;
+  peakGustRisk: string;
+  peakGustSub: string;
+  wind24hAvg: string;
+  spraySafety: string;
+  favorableSpray: string;
+  moderateDrift: string;
+  unfavorableSpray: string;
+  sprayMinimal: string;
+  sprayDelay: string;
+  windProjectionTitle: string;
+  windProjectionSub: string;
+  windCalm: string;
+  windBreeze: string;
+  windModerate: string;
+  windCaution: string;
+
+  // Extra Prediction & Search Keys
+  predictedRainfallTitle: string;
+  daysCount: string;
+  predictionModelComparison: string;
+  verificationWindow: string;
+  sourceComparison: string;
+  errorTrend: string;
+  transparencyTitle: string;
+  searchLanguagePlaceholder: string;
+  done: string;
+
   // Prediction
   predictionTitle: string;
   predictionSubtitle: string;
@@ -354,6 +437,87 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     pmTimelineSubtitle: "PM2.5 (fine) and PM10 (coarse) in µg/m³",
     activityPlannerTitle: "Outdoor Health Intelligence & Activity Windows",
     activityPlannerSub: "Clear recommendations combining air quality, temperature, humidity, UV index, and rain risk",
+
+    actRunning: "Running",
+    actJogging: "Jogging",
+    actWalking: "Walking",
+    actCycling: "Cycling",
+    actGeneral: "General Outdoors",
+    dataCoverage: "Data coverage",
+    outdoorConditionsNow: "Outdoor conditions now",
+    bestScoreToday: "Best score today",
+    heightenedAwarenessActive: "Heightened awareness thresholds active",
+    recommendedWindow: "Recommended window",
+    mergedGoodHours: "merged from adjacent favorable hours",
+    hoursWindow: "hour window",
+    hours: "hours",
+    whyThisTime: "Why this time?",
+    factorAirQuality: "Air quality",
+    factorTemperature: "Temperature",
+    factorRain: "Rain risk",
+    factorUv: "UV exposure",
+    factorWind: "Wind",
+    factorHumidity: "Humidity",
+    factorWarning: "Official warnings",
+    scoreLabel: "Score",
+    weightLabel: "Weight",
+    otherAvailableWindows: "Other available windows",
+    bestWindow: "Best window",
+    secondOption: "Second option",
+    thirdOption: "Third option",
+    showMoreOptions: "Show more options",
+    showFewerOptions: "Show fewer windows",
+    rankingMethodology: "How this recommendation works",
+    scoreByHourTitle: "Indicative score by hour",
+    tempHumidityTitle: "Temperature & humidity — forecast",
+    activeWarning: "Active official weather alert",
+    noActiveWarning: "No official warning in effect",
+    aqGood: "Good",
+    aqFair: "Fair",
+    aqModerate: "Moderate",
+    aqPoor: "Poor",
+    aqVeryPoor: "Very Poor",
+    aqAdviceGood: "Low particle pollution — comfortable for outdoor exercise.",
+    aqAdviceFair: "Acceptable for most people during moderate outdoor activity.",
+    aqAdviceModerate: "Consider reducing prolonged intense exercise outdoors.",
+    aqAdvicePoor: "Elevated particles — prefer shorter sessions or move indoors.",
+    aqAdviceVeryPoor: "High particle pollution — outdoor exertion is best avoided.",
+
+    rainTotal72h: "Next 72h Accumulation",
+    peakProbability: "Peak probability",
+    rainGuidance: "Precipitation Guidance & Impact",
+    rainGuidanceSub: "Advisories calculated from rain thresholds and continuous wet spells",
+    noRainThreats: "No significant rainfall threats flagged in the immediate forecast horizon.",
+    wetSpellsTitle: "Identified Wet Spells (Next 24h)",
+    wetSpellsSub: "Contiguous hours of anticipated rainfall",
+    durationHours: "Duration",
+    noWetSpells: "No continuous wet spells expected in the next 24 hours.",
+    peakGustRisk: "Peak Gust Risk",
+    peakGustSub: "Expected around peak thermal hours",
+    wind24hAvg: "24-Hour Average",
+    spraySafety: "Spray & Outdoor Safety",
+    favorableSpray: "Favorable for Spraying",
+    moderateDrift: "Moderate Drift Risk",
+    unfavorableSpray: "Unfavorable (High Drift)",
+    sprayMinimal: "Minimal pesticide/spray drift",
+    sprayDelay: "Delay spray application if possible",
+    windProjectionTitle: "24-Hour Wind Speed & Gust Projection",
+    windProjectionSub: "Surface speeds and estimated gusts",
+    windCalm: "Safe & Calm",
+    windBreeze: "Pleasant Breeze",
+    windModerate: "Moderate Wind",
+    windCaution: "Caution Advised",
+
+    predictedRainfallTitle: "Predicted Rainfall",
+    daysCount: "days",
+    predictionModelComparison: "ML model vs global forecast vs seasonal average",
+    verificationWindow: "Verification window",
+    sourceComparison: "Same rows, same window — source comparison",
+    errorTrend: "Error trend (7-day rolling)",
+    transparencyTitle: "Location & model transparency",
+    searchLanguagePlaceholder: "Search language...",
+    done: "Done",
+
     predictionTitle: "Smart Weather Prediction",
     predictionSubtitle: "Machine learning weather models, confidence intervals, and rain forecasting",
     settingsTitle: "Settings & Preferences",
@@ -518,6 +682,87 @@ export const TRANSLATIONS: Record<string, Partial<TranslationDict>> = {
     pmTimelineSubtitle: "पीएम 2.5 (सूक्ष्म) और पीएम 10 (धूल) µg/m³ में",
     activityPlannerTitle: "बाहरी स्वास्थ्य व गतिविधि समय",
     activityPlannerSub: "वायु गुणवत्ता, तापमान, नमी, यूवी और बारिश के आधार पर सही समय",
+
+    actRunning: "दौड़ना",
+    actJogging: "जॉगिंग",
+    actWalking: "टहलना",
+    actCycling: "साइकिल चलाना",
+    actGeneral: "सामान्य गतिविधि",
+    dataCoverage: "डेटा कवरेज",
+    outdoorConditionsNow: "वर्तमान बाहरी स्थिति",
+    bestScoreToday: "आज का सर्वश्रेष्ठ स्कोर",
+    heightenedAwarenessActive: "संवेदनशील फेफड़ों के लिए विशेष सीमाएं सक्रिय",
+    recommendedWindow: "सुझाया गया समय",
+    mergedGoodHours: "अनुकूल घंटों के आधार पर",
+    hoursWindow: "घंटे का समय",
+    hours: "घंटे",
+    whyThisTime: "यह समय क्यों सही है?",
+    factorAirQuality: "वायु गुणवत्ता",
+    factorTemperature: "तापमान",
+    factorRain: "बारिश का जोखिम",
+    factorUv: "यूवी स्तर",
+    factorWind: "हवा",
+    factorHumidity: "नमी",
+    factorWarning: "मौसम चेतावनी",
+    scoreLabel: "स्कोर",
+    weightLabel: "महत्व",
+    otherAvailableWindows: "अन्य उपलब्ध विकल्प",
+    bestWindow: "सर्वश्रेष्ठ समय",
+    secondOption: "दूसरा विकल्प",
+    thirdOption: "तीसरा विकल्प",
+    showMoreOptions: "और विकल्प देखें",
+    showFewerOptions: "कम विकल्प देखें",
+    rankingMethodology: "यह गणना कैसे काम करती है",
+    scoreByHourTitle: "प्रति घंटे अनुमानित स्कोर",
+    tempHumidityTitle: "तापमान व नमी — पूर्वानुमान",
+    activeWarning: "सक्रिय मौसम चेतावनी",
+    noActiveWarning: "कोई मौसम चेतावनी नहीं",
+    aqGood: "अच्छा",
+    aqFair: "संतोषजनक",
+    aqModerate: "मध्यम",
+    aqPoor: "खराब",
+    aqVeryPoor: "बहुत खराब",
+    aqAdviceGood: "कम कण प्रदूषण — बाहरी गतिविधियों और व्यायाम के लिए अनुकूल।",
+    aqAdviceFair: "अधिकांश लोगों के लिए मध्यम बाहरी गतिविधि हेतु उपयुक्त।",
+    aqAdviceModerate: "बाहर लंबे समय तक भारी व्यायाम करने से बचें।",
+    aqAdvicePoor: "कणों की मात्रा अधिक है — बाहर का समय कम रखें।",
+    aqAdviceVeryPoor: "अत्यधिक प्रदूषण — बाहर शारीरिक श्रम करने से बचें।",
+
+    rainTotal72h: "अगले 72 घंटे में कुल वर्षा",
+    peakProbability: "अधिकतम संभावना",
+    rainGuidance: "वर्षा मार्गदर्शन और प्रभाव",
+    rainGuidanceSub: "वर्षा सीमा और लगातार बारिश के आधार पर सलाह",
+    noRainThreats: "निकट भविष्य में भारी वर्षा का कोई खतरा नहीं है।",
+    wetSpellsTitle: "बारिश के दौर (अगले 24 घंटे)",
+    wetSpellsSub: "लगातार वर्षा के संभावित घंटे",
+    durationHours: "अवधि",
+    noWetSpells: "अगले 24 घंटों में लगातार बारिश की संभावना नहीं है।",
+    peakGustRisk: "तेज़ हवा का झोंका",
+    peakGustSub: "दोपहर के समय अधिक संभावना",
+    wind24hAvg: "24 घंटे का औसत",
+    spraySafety: "छिड़काव व बाहरी सुरक्षा",
+    favorableSpray: "छिड़काव के लिए उपयुक्त",
+    moderateDrift: "मध्यम बहाव जोखिम",
+    unfavorableSpray: "अनुपयुक्त (तेज हवा)",
+    sprayMinimal: "न्यूनतम बहाव, छिड़काव सुरक्षित",
+    sprayDelay: "संभव हो तो छिड़काव टालें",
+    windProjectionTitle: "24 घंटे हवा की गति और झोंकों का अनुमान",
+    windProjectionSub: "सतही हवा और अनुमानित झोंके",
+    windCalm: "शांत व सुरक्षित",
+    windBreeze: "सुखद हवा",
+    windModerate: "मध्यम हवा",
+    windCaution: "सावधानी जरूरी",
+
+    predictedRainfallTitle: "अनुमानित वर्षा",
+    daysCount: "दिन",
+    predictionModelComparison: "एआई मॉडल बनाम वैश्विक मॉडल बनाम मौसमी औसत",
+    verificationWindow: "सत्यापन समय सीमा",
+    sourceComparison: "सटीकता तुलना (कम त्रुटि बेहतर)",
+    errorTrend: "त्रुटि रुझान (7-दिवसीय औसत)",
+    transparencyTitle: "तकनीकी विवरण व डेटा स्रोत",
+    searchLanguagePlaceholder: "भाषा खोजें...",
+    done: "पूर्ण",
+
     predictionTitle: "स्मार्ट मौसम अनुमान",
     predictionSubtitle: "मशीन लर्निंग मौसम मॉडल और वर्षा पूर्वानुमान",
     settingsTitle: "सेटिंग्स व प्राथमिकताएं",

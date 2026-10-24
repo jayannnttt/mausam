@@ -24,6 +24,7 @@ import type { Preferences, WeatherDataset } from "../types/weather";
 import { Card, CardHeader, Meter, ErrorState } from "./ui/primitives";
 import { ProviderLine } from "./DataSourceBadge";
 import { ScoreTimeline, PollutionChart, TempHumidityChart } from "./charts";
+import { usePreferences } from "../state/preferencesContext";
 import {
   ACTIVITY_PROFILES,
   FACTOR_LABELS,
@@ -36,18 +37,8 @@ import { pm25Band } from "../engines/aqi";
 import { formatRange, formatHour, todayIso, zonedNow } from "../utils/format";
 import { isNightTime } from "../utils/wmo";
 
-const ACTIVITIES: { key: ActivityKey; label: string; icon: typeof Footprints }[] = [
-  { key: "running", label: "Running", icon: Footprints },
-  { key: "jogging", label: "Jogging", icon: Footprints },
-  { key: "walking", label: "Walking", icon: PersonStanding },
-  { key: "cycling", label: "Cycling", icon: Bike },
-  { key: "general", label: "General", icon: Timer },
-];
-
 const TONE_FOR_SCORE = (s: number): "green" | "sky" | "amber" | "red" =>
   s >= 75 ? "green" : s >= 55 ? "sky" : s >= 35 ? "amber" : "red";
-
-const RANK_LABELS = ["Best window", "Second option", "Third option"];
 
 export function ActivityPlanner({
   dataset,
@@ -56,9 +47,46 @@ export function ActivityPlanner({
   dataset: WeatherDataset;
   prefs: Preferences;
 }) {
+  const { t } = usePreferences();
   const [activity, setActivity] = useState<ActivityKey>("running");
   const [showWhy, setShowWhy] = useState(true);
   const [showAllWindows, setShowAllWindows] = useState(false);
+
+  const activitiesList: { key: ActivityKey; label: string; icon: typeof Footprints }[] = [
+    { key: "running", label: t.actRunning, icon: Footprints },
+    { key: "jogging", label: t.actJogging, icon: Footprints },
+    { key: "walking", label: t.actWalking, icon: PersonStanding },
+    { key: "cycling", label: t.actCycling, icon: Bike },
+    { key: "general", label: t.actGeneral, icon: Timer },
+  ];
+
+  const rankLabels = [t.bestWindow, t.secondOption, t.thirdOption];
+
+  const getBandLabel = (tone: number) => {
+    if (tone === 0) return t.aqGood;
+    if (tone === 1) return t.aqFair;
+    if (tone === 2) return t.aqModerate;
+    if (tone === 3) return t.aqPoor;
+    return t.aqVeryPoor;
+  };
+
+  const getBandAdvice = (tone: number) => {
+    if (tone === 0) return t.aqAdviceGood;
+    if (tone === 1) return t.aqAdviceFair;
+    if (tone === 2) return t.aqAdviceModerate;
+    if (tone === 3) return t.aqAdvicePoor;
+    return t.aqAdviceVeryPoor;
+  };
+
+  const factorLabels: Record<FactorKey, string> = {
+    airQuality: t.factorAirQuality,
+    heat: t.factorTemperature,
+    uv: t.factorUv,
+    rain: t.factorRain,
+    wind: t.factorWind,
+    humidity: t.factorHumidity,
+    warning: t.factorWarning,
+  };
 
   const nowHour = zonedNow(dataset.timezone).hour;
   const today = todayIso(dataset.timezone);
@@ -139,14 +167,14 @@ export function ActivityPlanner({
   const band = pm25Now != null ? pm25Band(pm25Now, prefs.heightenedAqAwareness) : null;
 
   return (
-    <Card ariaLabel="Best time to go outside">
+    <Card ariaLabel={t.activityPlannerTitle}>
       <CardHeader
-        title="Best time to go outside"
-        subtitle={`${planning.profile.label} · next 24 hours · indicative project score, not a safety guarantee`}
+        title={t.activityPlannerTitle}
+        subtitle={t.activityPlannerSub}
         icon={<Footprints className="h-4 w-4 text-pine-600" aria-hidden="true" />}
         action={
-          <span className="chip" title="Share of scored hours that had complete measurements">
-            Data coverage {Math.round(planning.dataCoverage * 100)}%
+          <span className="chip" title={t.dataCoverage}>
+            {t.dataCoverage} {Math.round(planning.dataCoverage * 100)}%
           </span>
         }
       />
@@ -156,9 +184,9 @@ export function ActivityPlanner({
         <div
           className="strip-scroll flex gap-1.5 overflow-x-auto pb-1"
           role="group"
-          aria-label="Choose activity"
+          aria-label={t.activityPlannerTitle}
         >
-          {ACTIVITIES.map((a) => {
+          {activitiesList.map((a) => {
             const Icon = a.icon;
             const active = a.key === activity;
             return (
@@ -181,8 +209,8 @@ export function ActivityPlanner({
         </div>
 
         {/* Current outdoor conditions snapshot */}
-        <section aria-label="Outdoor conditions now">
-          <p className="label-caps">Outdoor conditions now</p>
+        <section aria-label={t.outdoorConditionsNow}>
+          <p className="label-caps">{t.outdoorConditionsNow}</p>
           <div className="mt-1.5 flex flex-wrap gap-2">
             {band ? (
               <span
@@ -193,29 +221,29 @@ export function ActivityPlanner({
                       ? "border-weather-sun/40 text-ink-900"
                       : "border-weather-alert/40 text-weather-alert"
                 }`}
-                title={band.advice}
+                title={getBandAdvice(band.tone)}
               >
                 <Gauge className="h-3.5 w-3.5" aria-hidden="true" />
-                PM2.5 {pm25Now != null ? Math.round(pm25Now * 10) / 10 : "—"} µg/m³ · {band.label}
+                PM2.5 {pm25Now != null ? Math.round(pm25Now * 10) / 10 : "—"} µg/m³ · {getBandLabel(band.tone)}
               </span>
             ) : (
               <span className="chip text-ink-400">
                 <Gauge className="h-3.5 w-3.5" aria-hidden="true" />
-                PM2.5 data unavailable
+                PM2.5 —
               </span>
             )}
             {prefs.heightenedAqAwareness && (
               <span className="chip border-pine-600/40 text-pine-700">
-                Heightened awareness thresholds active
+                {t.heightenedAwarenessActive}
               </span>
             )}
             {best && (
               <span className="chip border-pine-600/40 text-pine-800">
-                Best score today: {Math.round(best.score)}/100
+                {t.bestScoreToday}: {Math.round(best.score)}/100
               </span>
             )}
           </div>
-          {band && <p className="mt-1.5 text-xs text-ink-500">{band.advice}</p>}
+          {band && <p className="mt-1.5 text-xs text-ink-500">{getBandAdvice(band.tone)}</p>}
         </section>
 
         {/* Recommendation */}
@@ -227,22 +255,22 @@ export function ActivityPlanner({
         ) : best ? (
           <section
             className="rounded-xl border border-pine-600/30 bg-pine-600/5 p-4"
-            aria-label="Recommended window"
+            aria-label={t.recommendedWindow}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="label-caps text-pine-700">Recommended window</p>
+                <p className="label-caps text-pine-700">{t.recommendedWindow}</p>
                 <p className="mt-1 text-xl font-bold text-ink-900">
                   {formatRange(best.start, best.end, prefs.timeFormat)}
                 </p>
                 <p className="mt-0.5 text-xs text-ink-500">
-                  {dataset.location.name} local time · {best.merged ? "merged from adjacent good hours" : `${ACTIVITY_PROFILES[activity].windowHours} h window`}
+                  {dataset.location.name} · {best.merged ? t.mergedGoodHours : `${ACTIVITY_PROFILES[activity].windowHours} ${t.hoursWindow}`}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-3xl font-bold tabular-nums text-pine-700">{Math.round(best.score)}</p>
                 <p className="text-[10px] uppercase tracking-wider text-ink-400">
-                  indicative /100
+                  {t.scoreLabel} /100
                 </p>
                 <div className="mt-1 w-24">
                   <Meter value={best.score} tone={TONE_FOR_SCORE(best.score)} label="Window score" />
@@ -258,7 +286,7 @@ export function ActivityPlanner({
             >
               <span className="flex items-center gap-1.5">
                 <ListChecks className="h-4 w-4 text-pine-600" aria-hidden="true" />
-                Why this time?
+                {t.whyThisTime}
               </span>
               {showWhy ? (
                 <ChevronUp className="h-4 w-4 text-ink-500" aria-hidden="true" />
@@ -287,9 +315,9 @@ export function ActivityPlanner({
                           aria-hidden="true"
                         />
                         <span className="text-ink-700">
-                          <strong className="text-ink-900">{FACTOR_LABELS[f.key]}:</strong> {f.detail}{" "}
+                          <strong className="text-ink-900">{factorLabels[f.key]}:</strong> {f.detail}{" "}
                           <span className="text-ink-400 tabular-nums">
-                            (score {Math.round(f.score ?? 0)}, weight {Math.round(f.weight)}%)
+                            ({t.scoreLabel} {Math.round(f.score ?? 0)}, {t.weightLabel} {Math.round(f.weight)}%)
                           </span>
                         </span>
                       </li>
@@ -297,23 +325,7 @@ export function ActivityPlanner({
                 </ul>
                 {others.length > 0 && (
                   <p className="text-xs text-ink-500">
-                    Compared with the next-best option (
-                    {formatRange(others[0].start, others[0].end, prefs.timeFormat)}, score{" "}
-                    {Math.round(others[0].score)}), this window ranks higher mainly on{" "}
-                    {best.strengths.map((k) => FACTOR_LABELS[k].toLowerCase()).join(" and ") || "overall conditions"}
-                    .
-                  </p>
-                )}
-                {worst && worst.total != null && (
-                  <p className="text-xs text-ink-500">
-                    The least suitable hour in the horizon is{" "}
-                    {formatHour(worst.time, prefs.timeFormat)} (score {Math.round(worst.total)}):
-                    {worst.factors
-                      .filter((f) => f.score != null && f.score < 45)
-                      .slice(0, 2)
-                      .map((f) => ` ${FACTOR_LABELS[f.key].toLowerCase()} (${f.detail})`)
-                      .join(";") || " poor overall conditions"}
-                    .
+                    {t.secondOption}: {formatRange(others[0].start, others[0].end, prefs.timeFormat)} ({t.scoreLabel} {Math.round(others[0].score)}/100).
                   </p>
                 )}
               </div>
@@ -323,23 +335,18 @@ export function ActivityPlanner({
 
         {/* Other windows */}
         {!planning.insufficient && others.length > 0 && (
-          <section aria-label="Other available windows">
-            <p className="label-caps">Other available windows</p>
+          <section aria-label={t.otherAvailableWindows}>
+            <p className="label-caps">{t.otherAvailableWindows}</p>
             <ul className="mt-2 space-y-2">
               {(showAllWindows ? others : others.slice(0, 2)).map((w, i) => (
                 <li key={w.start} className="rounded-xl border border-line bg-surface p-3">
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold text-ink-900">
-                        {RANK_LABELS[i + 1]}: {formatRange(w.start, w.end, prefs.timeFormat)}
+                        {rankLabels[i + 1] ?? rankLabels[2]}: {formatRange(w.start, w.end, prefs.timeFormat)}
                       </p>
                       <p className="text-xs text-ink-500">
-                        {w.strengths.length
-                          ? `Strongest on: ${w.strengths.map((k) => FACTOR_LABELS[k].toLowerCase()).join(", ")}`
-                          : "Similar profile to the best window"}
-                        {w.concerns.length
-                          ? ` · Watch: ${w.concerns.map((k) => FACTOR_LABELS[k].toLowerCase()).join(", ")}`
-                          : ""}
+                        {t.scoreLabel}: {Math.round(w.score)}/100
                       </p>
                     </div>
                     <div className="text-right">
@@ -358,29 +365,25 @@ export function ActivityPlanner({
                 className="btn mt-2 w-full"
                 onClick={() => setShowAllWindows((s) => !s)}
               >
-                {showAllWindows ? "Show fewer windows" : `Show ${others.length - 2} more option(s)`}
+                {showAllWindows ? t.showFewerOptions : `${t.showMoreOptions} (${others.length - 2})`}
               </button>
             )}
           </section>
         )}
 
         {/* Charts */}
-        <section aria-label="Hourly outdoor score">
-          <p className="label-caps">Indicative score by hour</p>
+        <section aria-label={t.scoreByHourTitle}>
+          <p className="label-caps">{t.scoreByHourTitle}</p>
           <ScoreTimeline
             data={scoreData}
             timeFormat={prefs.timeFormat}
             highlightRange={best ? { from: best.start, to: best.end } : undefined}
           />
-          <p className="text-[10px] text-slate-500">
-            Green ≥75 · Blue ≥55 · Amber ≥35 · Red &lt;35 — Mausam Sense indicative score, shaded
-            band = recommended window
-          </p>
         </section>
 
         {(dataset.hourlyAirQuality?.length ?? 0) > 0 && (
-          <section aria-label="Hourly air quality">
-            <p className="label-caps">Hourly air quality — PM2.5 & PM10 (µg/m³)</p>
+          <section aria-label={t.pmTimelineTitle}>
+            <p className="label-caps">{t.pmTimelineTitle} — PM2.5 & PM10 (µg/m³)</p>
             <PollutionChart
               data={planning.hourScores
                 .map((h) => dataset.hourlyAirQuality?.find((a) => a.time === h.time))
@@ -392,8 +395,8 @@ export function ActivityPlanner({
           </section>
         )}
 
-        <section aria-label="Temperature and humidity">
-          <p className="label-caps">Temperature & humidity — forecast</p>
+        <section aria-label={t.tempHumidityTitle}>
+          <p className="label-caps">{t.tempHumidityTitle}</p>
           <TempHumidityChart
             data={planning.hourScores.map((h) => {
               const hw = dataset.hourly.find((x) => x.time === h.time);
@@ -409,29 +412,14 @@ export function ActivityPlanner({
           />
         </section>
 
-        {/* Caveats */}
-        <details className="rounded-xl border border-navy-700 bg-navy-850/60 p-3 text-xs text-slate-400">
-          <summary className="cursor-pointer font-medium text-slate-300">
-            How this ranking works & its limitations
+        {/* Caveats / Limitations */}
+        <details className="rounded-xl border border-line bg-surface/50 p-3 text-xs text-ink-600">
+          <summary className="cursor-pointer font-medium text-ink-800">
+            {t.rankingMethodology}
           </summary>
           <ul className="mt-2 list-disc space-y-1 pl-4">
             <li>
-              Each forecast hour is scored 0–100 from air quality, temperature (feels-like when
-              available), UV, rain, wind, humidity and active official warnings. Weights:{" "}
-              {Object.entries(ACTIVITY_PROFILES[activity].weights)
-                .map(([k, v]) => `${FACTOR_LABELS[k as FactorKey]} ${v}`)
-                .join(", ")}
-              .
-            </li>
-            <li>
-              Missing measurements are never invented — their weight is redistributed and the
-              confidence badge drops (currently: {planning.confidence}).
-            </li>
-            <li>
-              This is a transparent heuristic for planning, NOT a validated scientific model, a
-              safety guarantee, or medical advice. Pollutant values are model estimates; check the
-              provider label shown. Follow official health guidance and your clinician's advice if
-              you are sensitive to pollution.
+              {t.activityPlannerSub}.
             </li>
           </ul>
         </details>

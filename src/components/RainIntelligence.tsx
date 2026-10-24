@@ -58,6 +58,7 @@ import {
 } from "../services/mlService";
 import { readCachedFix } from "../services/gpsLocation";
 import { Card, CardHeader, EmptyState, ErrorState, SkeletonCard } from "./ui/primitives";
+import { usePreferences } from "../state/preferencesContext";
 import {
   buildBreakdownRows,
   buildComparisonRows,
@@ -605,6 +606,7 @@ export function RainIntelligence({
   location: GeoLocation;
   dataMode: DataMode;
 }) {
+  const { t } = usePreferences();
   const [backendState, setBackendState] = useState<BackendState>("checking");
   const [backendError, setBackendError] = useState<string | null>(null);
   const [health, setHealth] = useState<MlHealth | null>(null);
@@ -757,9 +759,9 @@ export function RainIntelligence({
   return (
     <Card ariaLabel="Rainfall intelligence and forecast verification">
       <CardHeader
-        title="Rainfall Intelligence & IMD Forecast Verification"
-        subtitle="SIH 2026 · SIH26076 (Mausam) — machine-learning rainfall prediction, evaluated against observed rainfall on identical test rows"
-        icon={<Brain className="h-4 w-4 text-sky-450" aria-hidden="true" />}
+        title={t.predictionTitle}
+        subtitle={t.predictionSubtitle}
+        icon={<Brain className="h-4 w-4 text-pine" aria-hidden="true" />}
         action={
           <button
             type="button"
@@ -768,10 +770,10 @@ export function RainIntelligence({
               runVerification();
             }}
             disabled={verifyLoading || backendState !== "ready"}
-            title="Re-run verification"
+            title={t.refresh}
           >
             <RefreshCw className={`h-4 w-4 ${verifyLoading ? "animate-spin" : ""}`} aria-hidden="true" />
-            <span className="hidden sm:inline">Re-run</span>
+            <span className="hidden sm:inline">{t.refresh}</span>
           </button>
         }
       />
@@ -808,11 +810,10 @@ export function RainIntelligence({
             <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-ink-900">
                 <BarChart3 className="h-4 w-4 text-pine-600" aria-hidden="true" />
-                Predicted rainfall — next {predict?.horizon_days ?? 7} days
+                {t.predictedRainfallTitle} ({predict?.horizon_days ?? 7} {t.daysCount})
               </h3>
               <span className="text-[11px] text-ink-400">
-                ML model vs global NWP forecast vs climatology · issued{" "}
-                {fmtIsoDateTime(predict?.issued_at)}
+                {t.predictionModelComparison} · {fmtIsoDateTime(predict?.issued_at)}
               </span>
             </div>
 
@@ -828,13 +829,6 @@ export function RainIntelligence({
               <div className="space-y-3">
                 <PredictionChart data={predictionChart} />
                 <PredictionTable days={predict.days} />
-                <p className="text-[11px] leading-relaxed text-ink-500">
-                  ML rainfall = model estimate for the local day, with an 80% prediction interval
-                  (split-conformal). NWP forecast = the numerical weather prediction run being used
-                  as the model&apos;s input — it is <strong>not</strong> an IMD product. IMD&apos;s
-                  own forecast is compared in the verification section when an IMD API key is
-                  configured. Climatology = 2015–2023 day-of-year average for this coordinate.
-                </p>
                 {predict.notes?.length > 0 && (
                   <ul className="space-y-1 text-[11px] text-weather-sun">
                     {predict.notes.map((n) => (
@@ -853,7 +847,7 @@ export function RainIntelligence({
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-ink-900">
                 <CalendarRange className="h-4 w-4 text-pine-600" aria-hidden="true" />
-                Verification window
+                {t.verificationWindow}
               </h3>
 
               <div className="ml-auto flex flex-wrap items-center gap-1.5">
@@ -1002,24 +996,18 @@ export function RainIntelligence({
                     <ObservedVsPredictedChart data={verifyChart} />
                   </div>
                   <div>
-                    <p className="label-caps">Error trend (7-day rolling MAE)</p>
+                    <p className="label-caps">{t.errorTrend}</p>
                     <ErrorTrendChart data={verifyChart} />
                   </div>
                 </div>
 
                 <div>
                   <p className="label-caps">
-                    Same rows, same window — source comparison (lower is better)
+                    {t.sourceComparison}
                   </p>
                   <div className="mt-1.5">
                     <ComparisonTable rows={comparisonRows} />
                   </div>
-                  <p className="mt-1.5 text-[11px] leading-relaxed text-ink-400">
-                    Observation reference: reanalysis grid (~25 km), not a rain gauge. Bias &gt; 0
-                    means systematic overprediction; bias &lt; 0 means underprediction. Rain-day
-                    threshold: 1.0 mm/24 h (probability metrics use the model&apos;s calibrated
-                    probability; the NWP row is classified from its own rainfall amount).
-                  </p>
                 </div>
 
                 {verification.scores.imd && verification.scores.imd.available === false && (
@@ -1098,7 +1086,7 @@ export function RainIntelligence({
           <section aria-label="Location and data transparency" className="border-t border-line pt-4">
             <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-ink-900">
               <MapPin className="h-4 w-4 text-pine-600" aria-hidden="true" />
-              Location & data transparency
+              {t.transparencyTitle}
             </h3>
             <LocationTransparency
               location={location}

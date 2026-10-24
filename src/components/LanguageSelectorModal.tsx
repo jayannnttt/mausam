@@ -15,6 +15,7 @@ export function LanguageGrid({
   selectedCode: string;
   onSelect: (code: string) => void;
 }) {
+  const { t } = usePreferences();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -24,7 +25,6 @@ export function LanguageGrid({
       (l) =>
         l.name.toLowerCase().includes(q) ||
         l.nativeName.toLowerCase().includes(q) ||
-        l.region.toLowerCase().includes(q) ||
         l.code.toLowerCase().includes(q)
     );
   }, [query]);
@@ -38,7 +38,7 @@ export function LanguageGrid({
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search language / भाषा खोजें / மொழியைத் தேடுங்கள்..."
+          placeholder={t.searchLanguagePlaceholder ?? "Search language / भाषा खोजें..."}
           className="w-full rounded-md border border-line bg-paper py-2 pl-9 pr-4 text-xs sm:text-sm text-ink-900 placeholder:text-ink-400 focus:border-pine focus:outline-none transition-all"
         />
         {query && (
@@ -62,40 +62,29 @@ export function LanguageGrid({
               type="button"
               onClick={() => onSelect(lang.code)}
               aria-pressed={isSelected}
-              className={`group relative flex flex-col justify-between rounded-lg border p-3 text-left transition-all ${
+              className={`group relative flex items-center justify-between rounded-lg border p-3 text-left transition-all ${
                 isSelected
                   ? "border-pine bg-pine-surface text-pine-dark ring-1 ring-pine shadow-xs"
                   : "border-line bg-surface text-ink-800 hover:border-ink-300 hover:bg-line-subtle/40"
               }`}
             >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <span className="block text-sm font-semibold tracking-wide text-ink-950">
-                    {lang.nativeName}
-                  </span>
-                  <span className="block text-xs text-ink-500">
-                    {lang.name}
-                  </span>
-                </div>
-                {isSelected ? (
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-pine text-surface">
-                    <Check className="h-3 w-3 stroke-[3]" />
-                  </span>
-                ) : (
-                  <span className="rounded px-1.5 py-0.5 text-[10px] font-mono uppercase text-ink-400 group-hover:text-pine">
-                    {lang.code}
-                  </span>
-                )}
-              </div>
-
-              <div className="mt-2 flex items-center justify-between border-t border-line-subtle pt-1.5 text-[11px]">
-                <span className="truncate text-ink-400" title={lang.region}>
-                  {lang.region}
+              <div>
+                <span className="block text-sm font-semibold tracking-wide text-ink-950">
+                  {lang.nativeName}
                 </span>
-                <span className="shrink-0 font-medium text-pine">
-                  {lang.welcome}
+                <span className="block text-xs text-ink-500">
+                  {lang.name}
                 </span>
               </div>
+              {isSelected ? (
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-pine text-surface">
+                  <Check className="h-3.5 w-3.5 stroke-[3]" />
+                </span>
+              ) : (
+                <span className="rounded px-1.5 py-0.5 text-[10px] font-mono uppercase text-ink-400 group-hover:text-pine">
+                  {lang.code}
+                </span>
+              )}
             </button>
           );
         })}
@@ -165,7 +154,7 @@ export function LanguageSelectorModal({
             onClick={onClose}
             className="btn btn-primary px-5 text-xs font-semibold"
           >
-            Done
+            {t.done ?? "Done"}
           </button>
         </div>
       </div>

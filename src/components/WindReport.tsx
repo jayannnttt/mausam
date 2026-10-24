@@ -141,7 +141,7 @@ export function WindReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Peak Gust Risk
+              {t.peakGustRisk}
             </span>
             <div className="rounded-lg bg-weather-sun/10 p-2 text-weather-sun">
               <ArrowUpRight className="h-4 w-4" />
@@ -155,7 +155,7 @@ export function WindReport({
               <span className="text-sm font-semibold text-ink-600">{unitLabel} (est.)</span>
             </div>
             <p className="mt-1 text-xs text-ink-500">
-              Expected around peak thermal hours
+              {t.peakGustSub}
             </p>
           </div>
         </Card>
@@ -164,7 +164,7 @@ export function WindReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              24-Hour Average
+              {t.wind24hAvg}
             </span>
             <div className="rounded-lg bg-weather-rain/10 p-2 text-weather-rain">
               <Activity className="h-4 w-4" />
@@ -187,7 +187,7 @@ export function WindReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Spray & Outdoor Safety
+              {t.spraySafety}
             </span>
             <div className="rounded-lg bg-line-subtle p-2 text-ink-700">
               <Compass className="h-4 w-4" />
@@ -203,10 +203,10 @@ export function WindReport({
                   : "bg-weather-alert/15 text-weather-alert"
               }`}
             >
-              {currentSpeed < 15 ? "Favorable for Spraying" : currentSpeed < 25 ? "Moderate Drift Risk" : "Unfavorable (High Drift)"}
+              {currentSpeed < 15 ? t.favorableSpray : currentSpeed < 25 ? t.moderateDrift : t.unfavorableSpray}
             </span>
             <p className="mt-1 text-xs text-ink-500">
-              {currentSpeed < 15 ? "Minimal pesticide/spray drift" : "Delay pesticide application if possible"}
+              {currentSpeed < 15 ? t.sprayMinimal : t.sprayDelay}
             </p>
           </div>
         </Card>
@@ -215,8 +215,8 @@ export function WindReport({
       {/* Main 24-Hour Wind Speed Trend Chart */}
       <Card>
         <CardHeader
-          title="24-Hour Wind Speed & Gust Projection"
-          subtitle={`Surface speeds and estimated gusts in ${unitLabel}`}
+          title={t.windProjectionTitle}
+          subtitle={`${t.windProjectionSub} (${unitLabel})`}
           icon={<Wind className="h-4 w-4 text-pine" />}
         />
         <div className="p-4 sm:p-6 space-y-4">
@@ -312,19 +312,19 @@ export function WindReport({
             <div className="space-y-1.5 text-xs">
               <div className="flex items-center justify-between py-1 border-b border-line-subtle text-ink-600">
                 <span>0–5 km/h</span>
-                <span className="text-pine font-medium">Safe & Calm</span>
+                <span className="text-pine font-medium">{t.windCalm}</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-line-subtle text-ink-600">
                 <span>6–19 km/h</span>
-                <span className="text-pine font-medium">Pleasant Breeze</span>
+                <span className="text-pine font-medium">{t.windBreeze}</span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-line-subtle text-ink-600">
                 <span>20–38 km/h</span>
-                <span className="text-weather-sun font-medium">Moderate Wind</span>
+                <span className="text-weather-sun font-medium">{t.windModerate}</span>
               </div>
               <div className="flex items-center justify-between py-1 text-ink-600">
                 <span>39+ km/h</span>
-                <span className="text-weather-alert font-medium">Caution Advised</span>
+                <span className="text-weather-alert font-medium">{t.windCaution}</span>
               </div>
             </div>
           </div>

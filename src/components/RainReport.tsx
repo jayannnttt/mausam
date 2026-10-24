@@ -146,7 +146,7 @@ export function RainReport({
         <Card className="p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-              Next 72h Accumulation
+              {t.rainTotal72h}
             </span>
             <div className="rounded-lg bg-pine/10 p-2 text-pine">
               <Droplets className="h-4 w-4" />
@@ -160,7 +160,7 @@ export function RainReport({
               <span className="text-sm font-semibold text-ink-600">mm</span>
             </div>
             <p className="mt-1 text-xs text-ink-500">
-              Peak probability: {outlook.periods[2]?.maxProbabilityPct ?? 0}%
+              {t.peakProbability}: {outlook.periods[2]?.maxProbabilityPct ?? 0}%
             </p>
           </div>
         </Card>
@@ -171,8 +171,8 @@ export function RainReport({
         {/* Rainfall Guidance & Impact */}
         <Card>
           <CardHeader
-            title="Precipitation Guidance & Impact"
-            subtitle="Advisories calculated from rain thresholds and continuous wet spells"
+            title={t.rainGuidance}
+            subtitle={t.rainGuidanceSub}
             icon={<ShieldCheck className="h-4 w-4 text-pine" />}
           />
           <div className="p-4 sm:p-5 space-y-3">
@@ -184,7 +184,7 @@ export function RainReport({
 
             {outlook.messages.length === 0 && (
               <p className="text-xs text-ink-500">
-                No significant rainfall threats or wet spells flagged in the immediate forecast horizon.
+                {t.noRainThreats}
               </p>
             )}
           </div>
@@ -193,8 +193,8 @@ export function RainReport({
         {/* Wet Spells in Next 24 Hours */}
         <Card>
           <CardHeader
-            title="Identified Wet Spells (Next 24h)"
-            subtitle="Contiguous hours of anticipated rainfall"
+            title={t.wetSpellsTitle}
+            subtitle={t.wetSpellsSub}
             icon={<Clock className="h-4 w-4 text-weather-rain" />}
           />
           <div className="p-4 sm:p-5 space-y-3">
@@ -209,7 +209,7 @@ export function RainReport({
                       <span className="font-semibold text-ink-900">
                         {formatRange(rp.start, rp.end, prefs.timeFormat)}
                       </span>
-                      <p className="text-[11px] text-ink-500">Duration: {rp.hours} hours</p>
+                      <p className="text-[11px] text-ink-500">{t.durationHours}: {rp.hours} {t.hours}</p>
                     </div>
                     <div className="text-right">
                       <span className="font-semibold text-weather-rain tabular-nums">
@@ -217,7 +217,7 @@ export function RainReport({
                       </span>
                       {rp.maxProbabilityPct != null && (
                         <p className="text-[11px] text-ink-500">
-                          {Math.round(rp.maxProbabilityPct)}% peak likelihood
+                          {Math.round(rp.maxProbabilityPct)}% {t.peakProbability}
                         </p>
                       )}
                     </div>
@@ -227,7 +227,7 @@ export function RainReport({
             ) : (
               <div className="flex flex-col items-center justify-center py-6 text-center text-xs text-ink-500">
                 <Umbrella className="h-6 w-6 text-ink-300 mb-1" />
-                <p>No continuous wet spells expected in the next 24 hours.</p>
+                <p>{t.noWetSpells}</p>
               </div>
             )}
           </div>
